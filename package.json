@@ -1,0 +1,30 @@
+{
+  "name": "airbnc",
+  "version": "1.0.0",
+  "description": "This is a portfolio website showcasing my projects as a developer.   The goal of this project is to highlight my work and make it easy for others to explore what I’ve built.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "seed": "node ./db/seed-run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gokhansihli/airbnc.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/gokhansihli/airbnc/issues"
+  },
+  "homepage": "https://github.com/gokhansihli/airbnc#readme",
+  "dependencies": {
+    "dotenv": "^17.2.2",
+    "pg": "^8.16.3",
+    "pg-format": "^1.0.4"
+  },
+  "devDependencies": {
+    "jest": "^30.1.3"
+  }
+}
