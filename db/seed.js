@@ -1,12 +1,6 @@
-const db = require("./connection");
-const format = require("pg-format");
-const formatUsers = require("../utils/format-users");
-const formatPropertyTypes = require("../utils/format-property-types");
-const formatProperties = require("../utils/format-properties");
-const formatReviews = require("../utils/format-reviews");
-const formatImages = require("../utils/format-images");
-const formatFavourites = require("../utils/format-favourites");
-const formatBookings = require("../utils/format-bookings");
+const dropTables = require("./queries/drops");
+const createTables = require("./queries/creates");
+const insertData = require("./queries/inserts");
 
 async function seed(
   usersData,
@@ -17,143 +11,18 @@ async function seed(
   favouritesData,
   bookingsData
 ) {
-  await db.query(`DROP TABLE IF EXISTS properties_amenities;`);
-  await db.query(`DROP TABLE IF EXISTS amenities;`);
-  await db.query(`DROP TABLE IF EXISTS bookings;`);
-  await db.query(`DROP TABLE IF EXISTS favourites;`);
-  await db.query(`DROP TABLE IF EXISTS images;`);
-  await db.query(`DROP TABLE IF EXISTS reviews;`);
-  await db.query(`DROP TABLE IF EXISTS properties;`);
-  await db.query(`DROP TABLE IF EXISTS property_types;`);
-  await db.query(`DROP TABLE IF EXISTS users;`);
+  await dropTables();
 
-  await db.query(`CREATE TABLE users (
-                    user_id SERIAL PRIMARY KEY,
-                    first_name VARCHAR NOT NULL,
-                    surname VARCHAR NOT NULL,
-                    email VARCHAR NOT NULL,
-                    phone_number VARCHAR,
-                    is_host BOOLEAN NOT NULL,
-                    avatar VARCHAR,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                    );`);
+  await createTables();
 
-  await db.query(`CREATE TABLE property_types (
-                    property_type VARCHAR NOT NULL PRIMARY KEY,
-                    description TEXT NOT NULL
-                    );`);
-
-  await db.query(`CREATE TABLE properties (
-                    property_id SERIAL PRIMARY KEY,
-                    host_id INT NOT NULL REFERENCES users(user_id),
-                    name VARCHAR NOT NULL,
-                    location VARCHAR NOT NULL,
-                    property_type VARCHAR NOT NULL REFERENCES property_types(property_type),
-                    price_per_night DECIMAL NOT NULL, 
-                    description TEXT
-                    );`);
-
-  await db.query(`CREATE TABLE reviews (
-                    review_id SERIAL PRIMARY KEY,
-                    property_id INT NOT NULL REFERENCES properties(property_id),
-                    guest_id INT NOT NULL REFERENCES users(user_id),
-                    rating INT NOT NULL,
-                    comment TEXT,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                    );`);
-  await db.query(`CREATE TABLE images (
-                    image_id SERIAL PRIMARY KEY,
-                    property_id INT NOT NULL REFERENCES properties(property_id),
-                    image_url VARCHAR NOT NULL,
-                    alt_text VARCHAR NOT NULL
-                    );`);
-  await db.query(`CREATE TABLE favourites (
-                    favourite_id SERIAL PRIMARY KEY,
-                    guest_id INT NOT NULL REFERENCES users(user_id),
-                    property_id INT NOT NULL REFERENCES properties(property_id)
-                    );`);
-  await db.query(`CREATE TABLE bookings (
-                    booking_id SERIAL PRIMARY KEY,
-                    property_id INT NOT NULL REFERENCES properties(property_id),
-                    guest_id INT NOT NULL REFERENCES users(user_id),
-                    check_in_date DATE NOT NULL,
-                    check_out_date DATE NOT NULL,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                    );`);
-  await db.query(`CREATE TABLE amenities (
-                    amenity VARCHAR PRIMARY KEY
-                    );`);
-  await db.query(`CREATE TABLE properties_amenities (
-                    property_amenity SERIAL PRIMARY KEY,
-                    property_id INT NOT NULL REFERENCES properties(property_id),
-                    amenity_slug VARCHAR NOT NULL REFERENCES amenities(amenity)
-                    );`);
-
-  const insertedUsers = await db.query(
-    format(
-      `INSERT INTO users 
-    (first_name, surname, email, phone_number, is_host, avatar)
-    VALUES %L RETURNING *;`,
-      formatUsers(usersData)
-    )
-  );
-
-  await db.query(
-    format(
-      `INSERT INTO property_types 
-    (property_type, description)
-    VALUES %L`,
-      formatPropertyTypes(propertyTypesData)
-    )
-  );
-
-  const insertedProperties = await db.query(
-    format(
-      `INSERT INTO properties 
-    (host_id, name, location, property_type, price_per_night, description)
-    VALUES %L RETURNING *;`,
-      formatProperties(propertiesData, insertedUsers.rows)
-    )
-  );
-
-  await db.query(
-    format(
-      `INSERT INTO reviews 
-    (property_id, guest_id, rating, comment, created_at)
-    VALUES %L`,
-      formatReviews(reviewsData, insertedUsers.rows, insertedProperties.rows)
-    )
-  );
-
-  await db.query(
-    format(
-      `INSERT INTO images 
-    (property_id, image_url, alt_text)
-    VALUES %L`,
-      formatImages(imagesData, insertedProperties.rows)
-    )
-  );
-
-  await db.query(
-    format(
-      `INSERT INTO favourites 
-    (guest_id, property_id)
-    VALUES %L`,
-      formatFavourites(
-        favouritesData,
-        insertedUsers.rows,
-        insertedProperties.rows
-      )
-    )
-  );
-
-  await db.query(
-    format(
-      `INSERT INTO bookings 
-    (property_id, guest_id, check_in_date, check_out_date)
-    VALUES %L`,
-      formatBookings(bookingsData, insertedUsers.rows, insertedProperties.rows)
-    )
+  await insertData(
+    usersData,
+    propertyTypesData,
+    propertiesData,
+    reviewsData,
+    imagesData,
+    favouritesData,
+    bookingsData
   );
 }
 
