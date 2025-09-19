@@ -63,7 +63,7 @@ async function createTables() {
                     amenity VARCHAR PRIMARY KEY
                     );`);
   await db.query(`CREATE TABLE properties_amenities (
-                    property_amenity SERIAL PRIMARY KEY,
+                    property_amenity_id SERIAL PRIMARY KEY,
                     property_id INT NOT NULL REFERENCES properties(property_id),
                     amenity_slug VARCHAR NOT NULL REFERENCES amenities(amenity)
                     );`);
