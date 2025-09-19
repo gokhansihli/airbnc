@@ -8,6 +8,8 @@ const formatReviews = require("../../utils/format-reviews");
 const formatImages = require("../../utils/format-images");
 const formatFavourites = require("../../utils/format-favourites");
 const formatBookings = require("../../utils/format-bookings");
+const formatAmenities = require("../../utils/format-amenities");
+const formatPropertiesAmenities = require("../../utils/format-properties_amenities");
 
 async function insertData(
   usersData,
@@ -96,6 +98,24 @@ async function insertData(
       );
     }
   }
+
+  await db.query(
+    format(
+      `INSERT INTO amenities 
+    (amenity)
+    VALUES %L`,
+      formatAmenities(propertiesData)
+    )
+  );
+
+  await db.query(
+    format(
+      `INSERT INTO properties_amenities 
+    (property_id, amenity_slug)
+    VALUES %L`,
+      formatPropertiesAmenities(propertiesData, insertedProperties.rows)
+    )
+  );
 }
 
 module.exports = insertData;
