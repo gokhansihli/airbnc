@@ -1,12 +1,9 @@
-function formatPropertiesAmenities(propertiesData) {
+function formatPropertiesAmenities(propertiesData, insertedProperties) {
   const propertiesAmenitiesArray = [];
 
   propertiesData.forEach((property, index) => {
-    const property_id = index + 1;
+    const property_id = insertedProperties[index];
 
-    if (!property_id) {
-      throw new Error(`Property not found for amenity: ${property.name}`);
-    }
     property.amenities.forEach((amenity) => {
       propertiesAmenitiesArray.push([property_id, amenity]);
     });
