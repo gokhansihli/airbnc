@@ -1,13 +1,14 @@
 function createAmenities(propertiesData) {
   const propertiesAmenities = propertiesData.reduce((amenities, property) => {
     property.amenities.forEach((amenity) => {
-      amenities.push(amenity);
+      if (!amenities.includes(amenity)) {
+        amenities.push(amenity);
+      }
     });
     return amenities;
   }, []);
-  const settedAmenities = new Set(propertiesAmenities);
 
-  return Array.from(settedAmenities).map((amenity) => [amenity]);
+  return propertiesAmenities.map((amenity) => [amenity]);
 }
 
 module.exports = createAmenities;
