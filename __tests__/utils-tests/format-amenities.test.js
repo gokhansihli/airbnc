@@ -1,4 +1,4 @@
-const createAmenities = require("../format-amenities");
+const createAmenities = require("../../db/utils/format-amenities");
 
 describe("createAmenities", () => {
   test("Returns an array", () => {

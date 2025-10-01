@@ -1,4 +1,4 @@
-const formatFavourites = require("../format-favourites");
+const formatFavourites = require("../../db/utils/format-favourites");
 
 describe("formatFavourites", () => {
   test("Returns a new array", () => {

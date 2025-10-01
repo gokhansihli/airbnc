@@ -1,4 +1,4 @@
-const formatUsers = require("../format-users");
+const formatUsers = require("../../db/utils/format-users");
 
 describe("formatUsers", () => {
   test("Returns a new array", () => {

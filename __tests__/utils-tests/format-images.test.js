@@ -1,4 +1,4 @@
-const formatImages = require("../format-images");
+const formatImages = require("../../db/utils/format-images");
 
 describe("formatImages", () => {
   test("Returns a new array", () => {
