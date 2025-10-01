@@ -1,4 +1,4 @@
-const createUsersRef = require("../users-ref");
+const createUsersRef = require("../../db/utils/users-ref");
 
 describe("createUsersRef", () => {
   test("Returns an object", () => {

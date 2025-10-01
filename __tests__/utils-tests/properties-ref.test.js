@@ -1,4 +1,4 @@
-const createPropertiesRef = require("../properties-ref");
+const createPropertiesRef = require("../../db/utils/properties-ref");
 
 describe("createPropertiesRef", () => {
   test("Returns an object", () => {

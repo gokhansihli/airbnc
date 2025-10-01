@@ -1,15 +1,15 @@
 const db = require("../connection");
 const format = require("pg-format");
 
-const formatUsers = require("../../utils/format-users");
-const formatPropertyTypes = require("../../utils/format-property-types");
-const formatProperties = require("../../utils/format-properties");
-const formatReviews = require("../../utils/format-reviews");
-const formatImages = require("../../utils/format-images");
-const formatFavourites = require("../../utils/format-favourites");
-const formatBookings = require("../../utils/format-bookings");
-const formatAmenities = require("../../utils/format-amenities");
-const formatPropertiesAmenities = require("../../utils/format-properties_amenities");
+const formatUsers = require("../utils/format-users");
+const formatPropertyTypes = require("../utils/format-property-types");
+const formatProperties = require("../utils/format-properties");
+const formatReviews = require("../utils/format-reviews");
+const formatImages = require("../utils/format-images");
+const formatFavourites = require("../utils/format-favourites");
+const formatBookings = require("../utils/format-bookings");
+const formatAmenities = require("../utils/format-amenities");
+const formatPropertiesAmenities = require("../utils/format-properties_amenities");
 
 async function insertUsersData(usersData) {
   const insertedUsers = await db.query(

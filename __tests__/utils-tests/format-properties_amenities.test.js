@@ -1,4 +1,4 @@
-const formatPropertiesAmenities = require("../format-properties_amenities");
+const formatPropertiesAmenities = require("../../db/utils/format-properties_amenities");
 
 describe("formatPropertiesAmenities", () => {
   test("Returns a new array", () => {
@@ -21,7 +21,11 @@ describe("formatPropertiesAmenities", () => {
         amenities: ["WiFi", "TV", "Kitchen"],
       },
     ];
-    const result = formatPropertiesAmenities(propertiesData);
+    const insertedProperties = [1];
+    const result = formatPropertiesAmenities(
+      propertiesData,
+      insertedProperties
+    );
     expect(result).toEqual([
       [1, "WiFi"],
       [1, "TV"],
@@ -51,7 +55,11 @@ describe("formatPropertiesAmenities", () => {
         amenities: ["WiFi", "Parking", "Kitchen"],
       },
     ];
-    const result = formatPropertiesAmenities(propertiesData);
+    const insertedProperties = [1, 2];
+    const result = formatPropertiesAmenities(
+      propertiesData,
+      insertedProperties
+    );
     expect(result).toEqual([
       [1, "WiFi"],
       [1, "TV"],
