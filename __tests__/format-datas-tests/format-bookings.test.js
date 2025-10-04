@@ -1,4 +1,4 @@
-const formatBookings = require("../../db/utils/format-bookings");
+const { formatBookings } = require("../../db/utils/format-datas");
 
 describe("formatBookings", () => {
   test("Returns a new array", () => {

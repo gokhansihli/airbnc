@@ -27,3 +27,25 @@ Credentials are loaded from a `.env` file using the `dotenv` package.
 ### .env Example
 
 PGDATABASE=your_database_name
+
+## Start the app
+
+To start the app in development mode:
+
+```bash
+npm run dev
+```
+
+## Tests
+
+To run the all tests:
+
+```bash
+npm test
+```
+
+Or just to run the app:
+
+```bash
+npm run test-app
+```

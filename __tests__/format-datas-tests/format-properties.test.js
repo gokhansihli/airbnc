@@ -1,4 +1,4 @@
-const formatProperties = require("../../db/utils/format-properties");
+const { formatProperties } = require("../../db/utils/format-datas");
 
 describe("formatProperties", () => {
   test("Returns a new array", () => {

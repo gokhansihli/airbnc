@@ -1,4 +1,4 @@
-const createPropertiesRef = require("../../db/utils/properties-ref");
+const { createPropertiesRef } = require("../../db/utils/format-datas");
 
 describe("createPropertiesRef", () => {
   test("Returns an object", () => {

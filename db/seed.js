@@ -10,15 +10,15 @@ const {
   insertBookingsData,
 } = require("./queries/inserts");
 
-async function seed(
+async function seed({
   usersData,
   propertyTypesData,
   propertiesData,
   reviewsData,
   imagesData,
   favouritesData,
-  bookingsData
-) {
+  bookingsData,
+}) {
   await dropTables();
 
   await createTables();

@@ -1,4 +1,4 @@
-const formatReviews = require("../../db/utils/format-reviews");
+const { formatReviews } = require("../../db/utils/format-datas");
 
 describe("formatReviews", () => {
   test("Returns a new array", () => {
