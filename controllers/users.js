@@ -1,17 +1,24 @@
-const { fetchUsers } = require("../models/users");
+const { fetchUserById, updateUser } = require("../models/users");
 
-exports.getUsers = async (req, res, next) => {
+exports.getUserById = async (req, res, next) => {
   const { id } = req.params;
 
-  if (isNaN(id)) {
-    res.status(400).send({ msg: "Invalid user value!" });
+  try {
+    const user = await fetchUserById(id);
+    res.status(200).send({ user });
+  } catch (error) {
+    next(error);
   }
+};
 
-  const user = await fetchUsers(id);
+exports.patchUser = async (req, res, next) => {
+  const fieldstoUpdate = req.body;
+  const { id } = req.params;
 
-  if (!user) {
-    res.status(404).send({ msg: "User not found!" });
+  try {
+    const user = await updateUser(fieldstoUpdate, id);
+    await res.status(200).send({ user });
+  } catch (error) {
+    next(error);
   }
-
-  res.status(200).send({ user });
 };

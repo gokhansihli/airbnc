@@ -1,4 +1,4 @@
-const createUsersRef = require("../../db/utils/users-ref");
+const { createUsersRef } = require("../../db/utils/format-datas");
 
 describe("createUsersRef", () => {
   test("Returns an object", () => {
