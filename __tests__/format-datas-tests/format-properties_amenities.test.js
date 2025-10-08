@@ -21,7 +21,7 @@ describe("formatPropertiesAmenities", () => {
         amenities: ["WiFi", "TV", "Kitchen"],
       },
     ];
-    const insertedProperties = [1];
+    const insertedProperties = [{ property_id: 1 }];
     const result = formatPropertiesAmenities(
       propertiesData,
       insertedProperties
@@ -55,7 +55,7 @@ describe("formatPropertiesAmenities", () => {
         amenities: ["WiFi", "Parking", "Kitchen"],
       },
     ];
-    const insertedProperties = [1, 2];
+    const insertedProperties = [{ property_id: 1 }, { property_id: 2 }];
     const result = formatPropertiesAmenities(
       propertiesData,
       insertedProperties

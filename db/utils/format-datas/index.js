@@ -6,6 +6,6 @@ exports.formatPropertiesAmenities = require("./format-properties_amenities");
 exports.formatImages = require("./format-images");
 exports.formatFavourites = require("./format-favourites");
 exports.formatBookings = require("./format-bookings");
-exports.createAmenities = require("./format-amenities");
+exports.formatAmenities = require("./format-amenities");
 exports.createPropertiesRef = require("./properties-ref");
 exports.createUsersRef = require("./users-ref");

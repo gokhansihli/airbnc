@@ -8,6 +8,8 @@ const {
   insertImagesData,
   insertFavouritesData,
   insertBookingsData,
+  insertAmenitiesData,
+  insertPropertiesAmenitiesData,
 } = require("./queries/inserts");
 
 async function seed({
@@ -29,6 +31,8 @@ async function seed({
     propertiesData,
     insertedUsers
   );
+  await insertAmenitiesData(propertiesData);
+  await insertPropertiesAmenitiesData(propertiesData, insertedProperties);
   await insertReviewsData(reviewsData, insertedUsers, insertedProperties);
   await insertImagesData(imagesData, insertedProperties);
   await insertFavouritesData(favouritesData, insertedUsers, insertedProperties);

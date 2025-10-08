@@ -1,13 +1,13 @@
-const { createAmenities } = require("../../db/utils/format-datas");
+const { formatAmenities } = require("../../db/utils/format-datas");
 
-describe("createAmenities", () => {
+describe("formatAmenities", () => {
   test("Returns an array", () => {
-    const result = createAmenities([]);
+    const result = formatAmenities([]);
     expect(typeof result).toBe("object");
-    expect(Array.isArray(createAmenities([]))).toBe(true);
+    expect(Array.isArray(formatAmenities([]))).toBe(true);
   });
   test("Returns an empty array when passed an empty array", () => {
-    const result = createAmenities([]);
+    const result = formatAmenities([]);
 
     expect(result).toEqual([]);
   });
@@ -23,7 +23,7 @@ describe("createAmenities", () => {
         amenities: ["WiFi", "TV", "Kitchen"],
       },
     ];
-    const result = createAmenities(propertiesData);
+    const result = formatAmenities(propertiesData);
     expect(result).toEqual([["WiFi"], ["TV"], ["Kitchen"]]);
   });
   test("Formats multiple amenities property object correctly", () => {
@@ -47,7 +47,7 @@ describe("createAmenities", () => {
         amenities: ["WiFi", "Parking", "Kitchen"],
       },
     ];
-    const result = createAmenities(propertiesData);
+    const result = formatAmenities(propertiesData);
     expect(result).toEqual([["WiFi"], ["TV"], ["Kitchen"], ["Parking"]]);
   });
 });

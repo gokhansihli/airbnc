@@ -1,4 +1,4 @@
-function createAmenities(propertiesData) {
+function formatAmenities(propertiesData) {
   const propertiesAmenities = propertiesData.reduce((amenities, property) => {
     property.amenities.forEach((amenity) => {
       if (!amenities.includes(amenity)) {
@@ -11,4 +11,4 @@ function createAmenities(propertiesData) {
   return propertiesAmenities.map((amenity) => [amenity]);
 }
 
-module.exports = createAmenities;
+module.exports = formatAmenities;

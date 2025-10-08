@@ -23,13 +23,13 @@ exports.fetchPropertyReviews = async (id) => {
 
 exports.insertPropertyReview = async (id, guest_id, rating, comment) => {
   if (!comment) {
-    throw { status: 400, msg: "Comment should be provided!" };
+    return Promise.reject({ status: 400, msg: "Comment should be provided!" });
   }
   if (!rating) {
-    throw { status: 400, msg: "Rating should be provided!" };
+    return Promise.reject({ status: 400, msg: "Rating should be provided!" });
   }
   if (!guest_id) {
-    throw { status: 400, msg: "Guest id should be provided!" };
+    return Promise.reject({ status: 400, msg: "Guest id should be provided!" });
   }
 
   let queryStr = `INSERT INTO reviews (property_id, guest_id, rating, comment)
@@ -44,14 +44,12 @@ exports.insertPropertyReview = async (id, guest_id, rating, comment) => {
 };
 
 exports.removeReview = async (id) => {
-  if (isNaN(id)) {
-    throw { status: 400, msg: "Invalid review value!" };
-  }
+  if (isNaN(id))
+    return Promise.reject({ status: 400, msg: "Invalid review value!" });
 
   await checkExists("reviews", "review_id", id);
 
-  let queryStr = `DELETE FROM reviews
-  WHERE review_id = $1 RETURNING *;`;
+  let queryStr = `DELETE FROM reviews WHERE review_id = $1 RETURNING *`;
 
   const {
     rows: [review],

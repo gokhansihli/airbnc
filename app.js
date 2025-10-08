@@ -18,6 +18,16 @@ const {
   deletePropertyUserFavourite,
 } = require("./controllers/favourites");
 
+const {
+  getPropertyBookings,
+  postPropertyBooking,
+  deleteBooking,
+  patchBooking,
+  getUserBookings,
+} = require("./controllers/bookings");
+
+const { getAmenities } = require("./controllers/amenities");
+
 const app = express();
 
 app.use(express.json());
@@ -37,6 +47,14 @@ app.delete(
   "/api/properties/:property_id/users/:user_id/favourite",
   deletePropertyUserFavourite
 );
+
+app.get("/api/properties/:id/bookings", getPropertyBookings);
+app.get("/api/users/:id/bookings", getUserBookings);
+app.post("/api/properties/:id/booking", postPropertyBooking);
+app.delete("/api/bookings/:id", deleteBooking);
+app.patch("/api/bookings/:id", patchBooking);
+
+app.get("/api/amenities", getAmenities);
 
 app.all("/*path", handlePathNotFound);
 
