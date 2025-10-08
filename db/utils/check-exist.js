@@ -6,7 +6,7 @@ const checkExists = async (table, column, value) => {
   const { rows } = await db.query(queryStr, [value]);
 
   if (rows.length === 0) {
-    throw { status: 404, msg: `Resource not found!` };
+    return Promise.reject({ status: 404, msg: `Resource not found!` });
   }
 };
 

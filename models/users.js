@@ -3,7 +3,7 @@ const checkExists = require("../db/utils/check-exist");
 
 exports.fetchUserById = async (id) => {
   if (isNaN(id)) {
-    throw { status: 400, msg: "Invalid user value!" };
+    return Promise.reject({ status: 400, msg: "Invalid user value!" });
   }
 
   await checkExists("users", "user_id", id);
@@ -23,14 +23,13 @@ exports.fetchUserById = async (id) => {
 exports.updateUser = async (fieldstoUpdate, id) => {
   await checkExists("users", "user_id", id);
 
-  const { first_name, surname, email, phone, avatar } = fieldstoUpdate;
-
   const allowedFields = ["first_name", "surname", "email", "phone", "avatar"];
 
   const fields = Object.keys(fieldstoUpdate);
   const validFields = fields.filter((field) => allowedFields.includes(field));
 
-  if (validFields.length === 0) throw { status: 400, msg: "Invalid field!" };
+  if (validFields.length === 0)
+    return Promise.reject({ status: 400, msg: "Invalid field!" });
 
   const setUpdate = validFields
     .map((field, index) => {
@@ -39,7 +38,7 @@ exports.updateUser = async (fieldstoUpdate, id) => {
     })
     .join(", ");
 
-  const queryValues = validFields.map((key) => fieldstoUpdate[key]);
+  const queryValues = validFields.map((field) => fieldstoUpdate[field]);
   queryValues.push(id);
 
   let queryStr = `
