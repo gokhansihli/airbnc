@@ -1,10 +1,16 @@
 const db = require("../db/connection");
-const checkExists = require("../db/utils/check-exist");
+const checkExists = require("./utils-validations/check-exist");
+const {
+  ValidateFetchPropertyBookings,
+  validateInsertPropertyBooking,
+  validateRemoveBooking,
+  validateUpdateBooking,
+  validateFetchUserBookings,
+} = require("./utils-validations/bookings-validations");
 
 exports.fetchPropertyBookings = async (id) => {
-  if (isNaN(id))
-    return Promise.reject({ status: 400, msg: "Invalid property value!" });
-  await checkExists("properties", "property_id", id);
+  await ValidateFetchPropertyBookings(id);
+  await checkExists("properties", "property_id", id, "Property not found!");
 
   let queryStr = `SELECT bookings.booking_id, bookings.check_in_date, bookings.check_out_date, bookings.created_at
     FROM bookings
@@ -24,27 +30,14 @@ exports.insertPropertyBooking = async (
   check_in_date,
   check_out_date
 ) => {
-  if (isNaN(id))
-    return Promise.reject({
-      status: 400,
-      msg: "Property id should be number!",
-    });
-
-  if (!guest_id)
-    return Promise.reject({ status: 400, msg: "Guest id should be provided!" });
-  if (isNaN(guest_id))
-    return Promise.reject({ status: 400, msg: "Guest id should be number!" });
-
-  if (!check_in_date)
-    return Promise.reject({
-      status: 400,
-      msg: "Check in date should be provided!",
-    });
-  if (!check_out_date)
-    return Promise.reject({
-      status: 400,
-      msg: "Check out date should be provided!",
-    });
+  await validateInsertPropertyBooking(
+    id,
+    guest_id,
+    check_in_date,
+    check_out_date
+  );
+  await checkExists("properties", "property_id", id, "Property not found!");
+  await checkExists("users", "user_id", guest_id, "User not found!");
 
   let queryStr = `INSERT INTO bookings (property_id, guest_id, check_in_date, check_out_date)
   VALUES ($1, $2, $3, $4) RETURNING *`;
@@ -63,10 +56,8 @@ exports.insertPropertyBooking = async (
 };
 
 exports.removeBooking = async (id) => {
-  if (isNaN(id))
-    return Promise.reject({ status: 400, msg: "Invalid booking value!" });
-
-  await checkExists("bookings", "booking_id", id);
+  await validateRemoveBooking(id);
+  await checkExists("bookings", "booking_id", id, "Booking not found!");
 
   let queryStr = `DELETE FROM bookings WHERE booking_id = $1 RETURNING *`;
 
@@ -78,7 +69,7 @@ exports.removeBooking = async (id) => {
 };
 
 exports.updateBooking = async (fieldsToUpdate, id) => {
-  await checkExists("bookings", "booking_id", id);
+  await checkExists("bookings", "booking_id", id, "Booking not found!");
 
   const allowedFields = ["check_in_date", "check_out_date"];
 
@@ -86,8 +77,7 @@ exports.updateBooking = async (fieldsToUpdate, id) => {
 
   const validFields = fields.filter((field) => allowedFields.includes(field));
 
-  if (validFields.length === 0)
-    return Promise.reject({ status: 400, msg: "Invalid field!" });
+  await validateUpdateBooking(validFields);
 
   const setUpdate = validFields
     .map((field, index) => `${field} = $${index + 1}`)
@@ -108,9 +98,8 @@ exports.updateBooking = async (fieldsToUpdate, id) => {
 };
 
 exports.fetchUserBookings = async (id) => {
-  if (isNaN(id))
-    return Promise.reject({ status: 400, msg: "Invalid user value!" });
-  await checkExists("users", "user_id", id);
+  await validateFetchUserBookings(id);
+  await checkExists("users", "user_id", id, "User not found!");
 
   let queryStr = `SELECT bookings.booking_id, bookings.check_in_date, bookings.check_out_date, bookings.property_id, properties.name AS property_name, 
   CONCAT(users.first_name, ' ', users.surname) AS host,

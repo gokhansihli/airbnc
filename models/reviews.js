@@ -1,5 +1,9 @@
 const db = require("../db/connection");
-const checkExists = require("../db/utils/check-exist");
+const checkExists = require("./utils-validations/check-exist");
+const {
+  validateInsertPropertyReview,
+  validateRemoveReview,
+} = require("./utils-validations/reviews-validations");
 
 exports.fetchPropertyReviews = async (id) => {
   await checkExists("properties", "property_id", id);
@@ -22,15 +26,9 @@ exports.fetchPropertyReviews = async (id) => {
 };
 
 exports.insertPropertyReview = async (id, guest_id, rating, comment) => {
-  if (!comment) {
-    return Promise.reject({ status: 400, msg: "Comment should be provided!" });
-  }
-  if (!rating) {
-    return Promise.reject({ status: 400, msg: "Rating should be provided!" });
-  }
-  if (!guest_id) {
-    return Promise.reject({ status: 400, msg: "Guest id should be provided!" });
-  }
+  await checkExists("properties", "property_id", id, "Property not found!");
+  await validateInsertPropertyReview(guest_id, rating, comment);
+  await checkExists("users", "user_id", guest_id, "User not found!");
 
   let queryStr = `INSERT INTO reviews (property_id, guest_id, rating, comment)
                   VALUES
@@ -44,10 +42,8 @@ exports.insertPropertyReview = async (id, guest_id, rating, comment) => {
 };
 
 exports.removeReview = async (id) => {
-  if (isNaN(id))
-    return Promise.reject({ status: 400, msg: "Invalid review value!" });
-
-  await checkExists("reviews", "review_id", id);
+  await validateRemoveReview(id);
+  await checkExists("reviews", "review_id", id, "Review not found!");
 
   let queryStr = `DELETE FROM reviews WHERE review_id = $1 RETURNING *`;
 

@@ -1,5 +1,9 @@
 const db = require("../db/connection");
-const checkExists = require("../db/utils/check-exist");
+const checkExists = require("./utils-validations/check-exist");
+const {
+  ValidateFetchProperties,
+  validateFetchPropertyById,
+} = require("./utils-validations/properties-validations");
 
 exports.fetchProperties = async (
   minprice,
@@ -9,28 +13,21 @@ exports.fetchProperties = async (
   order = "DESC",
   host
 ) => {
-  if ([minprice, maxprice].some((price) => price != null && isNaN(price)))
-    return Promise.reject({ status: 400, msg: "Invalid price value!" });
-
-  const propertyTypes = ["APARTMENT", "HOUSE", "STUDIO"];
-  if (property_type && !propertyTypes.includes(property_type.toUpperCase()))
-    return Promise.reject({ status: 400, msg: "Invalid property type value!" });
-
-  const allowedOrder = ["ASC", "DESC"];
   const orderBy = order.toUpperCase();
-  if (!allowedOrder.includes(orderBy))
-    return Promise.reject({ status: 400, msg: "Invalid order value!" });
-
   const sortLookUp = {
     cost_per_night: "price_per_night",
     popularity: "avg_rating",
     favourite: "favourited_count",
   };
-  if (!(sort in sortLookUp))
-    return Promise.reject({ status: 400, msg: "Invalid sort value!" });
 
-  if (host && isNaN(host))
-    return Promise.reject({ status: 400, msg: "Invalid host value!" });
+  await ValidateFetchProperties(
+    minprice,
+    maxprice,
+    property_type,
+    sort,
+    order,
+    host
+  );
 
   const amenities = ["WiFi", "TV", "Kitchen", "Parking", "Washer"];
 
@@ -95,17 +92,12 @@ exports.fetchProperties = async (
 };
 
 exports.fetchPropertyById = async (id, user_id) => {
-  if (isNaN(id)) {
-    return Promise.reject({ status: 400, msg: "Invalid property value!" });
-  }
-  if (user_id && isNaN(user_id)) {
-    return Promise.reject({ status: 400, msg: "Invalid user id value!" });
-  }
+  await validateFetchPropertyById(id, user_id);
 
-  await checkExists("properties", "property_id", id);
+  await checkExists("properties", "property_id", id, "Property not found!");
 
   if (user_id !== undefined) {
-    await checkExists("users", "user_id", user_id);
+    await checkExists("users", "user_id", user_id, "User not found!");
   }
 
   let queryStr = `SELECT properties.property_id, properties.name AS property_name, properties.location, 

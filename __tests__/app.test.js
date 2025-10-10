@@ -208,98 +208,98 @@ describe("app", () => {
         expect(body.msg).toBe("Invalid host value!");
       });
     });
-    describe("GET api/properties/:id", () => {
-      test("Responds with status of 200", async () => {
-        await request(app).get("/api/properties/1").expect(200);
+  });
+  describe("GET api/properties/:id", () => {
+    test("Responds with status of 200", async () => {
+      await request(app).get("/api/properties/1").expect(200);
+    });
+    test("Property should be an object", async () => {
+      const { body } = await request(app).get("/api/properties/1");
+
+      const property = body.property;
+
+      expect(typeof property).toBe("object");
+    });
+    test("Property should match with id", async () => {
+      const { body } = await request(app).get("/api/properties/1");
+
+      const property = body.property;
+
+      expect(property.property_id).toBe(1);
+    });
+    test("Property should has correct shape", async () => {
+      const { body } = await request(app).get("/api/properties/1");
+
+      const property = body.property;
+
+      expect(property).toHaveProperty("property_id");
+      expect(property).toHaveProperty("property_name");
+      expect(property).toHaveProperty("location");
+      expect(property).toHaveProperty("price_per_night");
+      expect(property).toHaveProperty("description");
+      expect(property).toHaveProperty("host");
+      expect(property).toHaveProperty("host_avatar");
+      expect(property).toHaveProperty("favourited_count");
+      expect(property).toHaveProperty("images");
+    });
+    test("Property should has an images property with an array of images", async () => {
+      const { body } = await request(app).get("/api/properties/1");
+
+      const testImages = body.property.images;
+
+      expect(Array.isArray(testImages)).toBe(true);
+      testImages.forEach((image) => {
+        expect(typeof image).toBe("string");
       });
-      test("Property should be an object", async () => {
-        const { body } = await request(app).get("/api/properties/1");
+    });
+    test("Property should has an amenities property with an array of amenities", async () => {
+      const { body } = await request(app).get("/api/properties/1");
 
-        const property = body.property;
+      const testAmenities = body.property.amenities;
 
-        expect(typeof property).toBe("object");
+      expect(Array.isArray(testAmenities)).toBe(true);
+      testAmenities.forEach((amenity) => {
+        expect(typeof amenity).toBe("string");
       });
-      test("Property should match with id", async () => {
-        const { body } = await request(app).get("/api/properties/1");
+    });
+    test("Property should take optional query as user_id", async () => {
+      const { body } = await request(app)
+        .get("/api/properties/1")
+        .query({ user_id: 1 });
 
-        const property = body.property;
+      const testFavourited = body.property.favourited;
 
-        expect(property.property_id).toBe(1);
-      });
-      test("Property should has correct shape", async () => {
-        const { body } = await request(app).get("/api/properties/1");
+      expect(typeof testFavourited).toBe("boolean");
+    });
+    test("Responds with status of 400 if user id is not number", async () => {
+      const { body } = await request(app)
+        .get("/api/properties/2")
+        .query({ user_id: "abc" })
+        .expect(400);
 
-        const property = body.property;
+      expect(body.msg).toBe("User value should be a number!");
+    });
+    test("Responds with status of 400 if property id is not a number", async () => {
+      const { body } = await request(app)
+        .get("/api/properties/abc")
+        .expect(400);
 
-        expect(property).toHaveProperty("property_id");
-        expect(property).toHaveProperty("property_name");
-        expect(property).toHaveProperty("location");
-        expect(property).toHaveProperty("price_per_night");
-        expect(property).toHaveProperty("description");
-        expect(property).toHaveProperty("host");
-        expect(property).toHaveProperty("host_avatar");
-        expect(property).toHaveProperty("favourited_count");
-        expect(property).toHaveProperty("images");
-      });
-      test("Property should has an images property with an array of images", async () => {
-        const { body } = await request(app).get("/api/properties/1");
+      expect(body.msg).toBe("Property value should be a number!");
+    });
+    test("Responds with status of 404 if user id is not exist", async () => {
+      const { body } = await request(app)
+        .get("/api/properties/2")
+        .query({ user_id: 10000 })
+        .expect(404);
 
-        const testImages = body.property.images;
+      expect(body.msg).toBe("User not found!");
+    });
+    test("Responds with status of 404 if property id is not exist", async () => {
+      const { body } = await request(app)
+        .get("/api/properties/100000")
+        .expect(404);
 
-        expect(Array.isArray(testImages)).toBe(true);
-        testImages.forEach((image) => {
-          expect(typeof image).toBe("string");
-        });
-      });
-      test("Property should has an amenities property with an array of amenities", async () => {
-        const { body } = await request(app).get("/api/properties/1");
-
-        const testAmenities = body.property.amenities;
-
-        expect(Array.isArray(testAmenities)).toBe(true);
-        testAmenities.forEach((amenity) => {
-          expect(typeof amenity).toBe("string");
-        });
-      });
-      test("Property should take optional query as user_id", async () => {
-        const { body } = await request(app)
-          .get("/api/properties/1")
-          .query({ user_id: 1 });
-
-        const testFavourited = body.property.favourited;
-
-        expect(typeof testFavourited).toBe("boolean");
-      });
-      test("Responds with status of 400 if user id is not number", async () => {
-        const { body } = await request(app)
-          .get("/api/properties/2")
-          .query({ user_id: "abc" })
-          .expect(400);
-
-        expect(body.msg).toBe("Invalid user id value!");
-      });
-      test("Responds with status of 400 if id is not a number", async () => {
-        const { body } = await request(app)
-          .get("/api/properties/abc")
-          .expect(400);
-
-        expect(body.msg).toBe("Invalid property value!");
-      });
-      test("Responds with status of 404 if passed number is not included in user id", async () => {
-        const { body } = await request(app)
-          .get("/api/properties/2")
-          .query({ user_id: 10000 })
-          .expect(404);
-
-        expect(body.msg).toBe("Resource not found!");
-      });
-      test("Responds with status of 404 if passed number is not included in properties", async () => {
-        const { body } = await request(app)
-          .get("/api/properties/100000")
-          .expect(404);
-
-        expect(body.msg).toBe("Resource not found!");
-      });
+      expect(body.msg).toBe("Property not found!");
     });
   });
   describe("GET api/properties/:id/reviews", () => {
@@ -379,12 +379,12 @@ describe("app", () => {
     test("Responds with status 400 if id is not a number", async () => {
       const { body } = await request(app).get("/api/users/abc").expect(400);
 
-      expect(body.msg).toBe("Invalid user value!");
+      expect(body.msg).toBe("User value should be a number!");
     });
     test("Responds with status 404 if user not exist", async () => {
       const { body } = await request(app).get("/api/users/100000").expect(404);
 
-      expect(body.msg).toBe("Resource not found!");
+      expect(body.msg).toBe("User not found!");
     });
   });
   describe("POST api/properties/:id/reviews", () => {
@@ -445,6 +445,20 @@ describe("app", () => {
 
       expect(body.msg).toBe("Rating should be provided!");
     });
+    test("Responds with status of 400 if rating is not number", async () => {
+      const testReview = {
+        guest_id: 1,
+        rating: "abc",
+        comment: "dfsdf",
+      };
+
+      const { body } = await request(app)
+        .post("/api/properties/1/reviews")
+        .send(testReview)
+        .expect(400);
+
+      expect(body.msg).toBe("Rating should be a number!");
+    });
     test("Responds with status of 400 if guest id is not provided", async () => {
       const testReview = {
         rating: 4,
@@ -458,24 +472,10 @@ describe("app", () => {
 
       expect(body.msg).toBe("Guest id should be provided!");
     });
-    test("Responds with status of 400 if passed proprerty id number is not exist", async () => {
+    test("Responds with status of 400 if guest id is not number", async () => {
       const testReview = {
-        guest_id: 1,
-        rating: 4,
-        comment: "dfsdf",
-      };
-
-      const { body } = await request(app)
-        .post("/api/properties/100000/reviews")
-        .send(testReview)
-        .expect(400);
-
-      expect(body.msg).toBe("Bad Request!");
-    });
-    test("Responds with status of 400 if passed guest_id number is not exist", async () => {
-      const testReview = {
-        guest_id: 100000,
-        rating: 4,
+        guest_id: "abc",
+        rating: 1,
         comment: "dfsdf",
       };
 
@@ -484,21 +484,35 @@ describe("app", () => {
         .send(testReview)
         .expect(400);
 
-      expect(body.msg).toBe("Bad Request!");
+      expect(body.msg).toBe("Guest id should be a number!");
     });
-    test("Responds with status of 400 if rating is not number", async () => {
+    test("Responds with status of 404 if passed guest_id is not exist", async () => {
       const testReview = {
-        guest_id: 1,
-        rating: "abc",
+        guest_id: 999999,
+        rating: 4,
         comment: "dfsdf",
       };
 
       const { body } = await request(app)
         .post("/api/properties/1/reviews")
         .send(testReview)
-        .expect(400);
+        .expect(404);
 
-      expect(body.msg).toBe("Bad Request!");
+      expect(body.msg).toBe("User not found!");
+    });
+    test("Responds with status of 404 if passed proprerty id number is not exist", async () => {
+      const testReview = {
+        guest_id: 1,
+        rating: 4,
+        comment: "dfsdf",
+      };
+
+      const { body } = await request(app)
+        .post("/api/properties/999999/reviews")
+        .send(testReview)
+        .expect(404);
+
+      expect(body.msg).toBe("Property not found!");
     });
   });
   describe("DELETE api/reviews/:id", () => {
@@ -526,13 +540,13 @@ describe("app", () => {
         .delete("/api/reviews/abc")
         .expect(400);
 
-      expect(body.msg).toBe("Invalid review value!");
+      expect(body.msg).toBe("Review id should be a number!");
     });
     test("Responds with status 404 if review id is not exist", async () => {
       const { body } = await request(app)
         .delete("/api/reviews/999")
         .expect(404);
-      expect(body.msg).toBe("Resource not found!");
+      expect(body.msg).toBe("Review not found!");
     });
   });
   describe("PATCH api/users/:id", () => {
@@ -600,10 +614,10 @@ describe("app", () => {
 
       expect(body.msg).toBe("Invalid field!");
     });
-    test("Responds with 404 if user id is not included", async () => {
+    test("Responds with 404 if user id is not exist", async () => {
       const { body } = await request(app).patch("/api/users/99999").expect(404);
 
-      expect(body.msg).toBe("Resource not found!");
+      expect(body.msg).toBe("User not found!");
     });
   });
   describe("POST api/properties/:id/favourite", () => {
@@ -658,6 +672,14 @@ describe("app", () => {
 
       expect(body.msg).toBe("Property id should be number!");
     });
+    test("Responds with status of 404 if guest_id is not exist", async () => {
+      const { body } = await request(app)
+        .post("/api/properties/1/favourite")
+        .send({ guest_id: 999999 })
+        .expect(404);
+
+      expect(body.msg).toBe("User not found!");
+    });
   });
   describe("DELETE api/properties/:id/users/:id/favourite", () => {
     test("Responds with status of 204", async () => {
@@ -686,28 +708,28 @@ describe("app", () => {
         .delete("/api/properties/abc/users/6/favourite")
         .expect(400);
 
-      expect(body.msg).toBe("Invalid property value!");
+      expect(body.msg).toBe("Property value should be a number!");
     });
     test("Responds with status 400 if user_id is not a number", async () => {
       const { body } = await request(app)
         .delete("/api/properties/1/users/abc/favourite")
         .expect(400);
 
-      expect(body.msg).toBe("Invalid user value!");
+      expect(body.msg).toBe("User value should be a number!");
     });
     test("Responds with status 404 if property_id is not exist", async () => {
       const { body } = await request(app)
         .delete("/api/properties/9999/users/6/favourite")
         .expect(404);
 
-      expect(body.msg).toBe("Resource not found!");
+      expect(body.msg).toBe("Property not found!");
     });
     test("Responds with status 404 if user_id is not exist", async () => {
       const { body } = await request(app)
         .delete("/api/properties/1/users/99999/favourite")
         .expect(404);
 
-      expect(body.msg).toBe("Resource not found!");
+      expect(body.msg).toBe("User not found!");
     });
   });
   describe("GET api/amenities", () => {
@@ -787,14 +809,14 @@ describe("app", () => {
         .get("/api/properties/abc/bookings")
         .expect(400);
 
-      expect(body.msg).toBe("Invalid property value!");
+      expect(body.msg).toBe("Property value should be a number!");
     });
     test("Responds with status 404 if property_id is not exist", async () => {
       const { body } = await request(app)
         .get("/api/properties/99999/bookings")
         .expect(404);
 
-      expect(body.msg).toBe("Resource not found!");
+      expect(body.msg).toBe("Property not found!");
     });
   });
   describe("POST api/properties/:id/booking", () => {
@@ -914,6 +936,34 @@ describe("app", () => {
 
       expect(body.msg).toBe("Booking clash with an existing booking!");
     });
+    test("Responds with status of 404 if guest_id is not exist", async () => {
+      const testBooking = {
+        guest_id: 999999,
+        check_in_date: "2026-12-01T00:00:00.000Z",
+        check_out_date: "2026-12-05T00:00:00.000Z",
+      };
+
+      const { body } = await request(app)
+        .post("/api/properties/1/booking")
+        .send(testBooking)
+        .expect(404);
+
+      expect(body.msg).toBe("User not found!");
+    });
+    test("Responds with status of 404 if property id is not exist", async () => {
+      const testBooking = {
+        guest_id: 2,
+        check_in_date: "2026-12-01T00:00:00.000Z",
+        check_out_date: "2026-12-05T00:00:00.000Z",
+      };
+
+      const { body } = await request(app)
+        .post("/api/properties/9999999/booking")
+        .send(testBooking)
+        .expect(404);
+
+      expect(body.msg).toBe("Property not found!");
+    });
   });
   describe("DELETE api/bookings/:id", () => {
     test("Responds with status of 204", async () => {
@@ -947,7 +997,7 @@ describe("app", () => {
       const { body } = await request(app)
         .delete("/api/bookings/999")
         .expect(404);
-      expect(body.msg).toBe("Resource not found!");
+      expect(body.msg).toBe("Booking not found!");
     });
   });
   describe("PATCH api/bookings/:id", () => {
@@ -1017,10 +1067,12 @@ describe("app", () => {
 
       expect(body.msg).toBe("Invalid field!");
     });
-    test("Responds with 404 if user id is not included", async () => {
-      const { body } = await request(app).patch("/api/users/99999").expect(404);
+    test("Responds with 404 if user id is not exist", async () => {
+      const { body } = await request(app)
+        .patch("/api/bookings/99999")
+        .expect(404);
 
-      expect(body.msg).toBe("Resource not found!");
+      expect(body.msg).toBe("Booking not found!");
     });
   });
   describe("GET api/users/:id/bookings", () => {
@@ -1064,14 +1116,14 @@ describe("app", () => {
         .get("/api/users/abc/bookings")
         .expect(400);
 
-      expect(body.msg).toBe("Invalid user value!");
+      expect(body.msg).toBe("User value should be a number!");
     });
     test("Responds with status 404 if user_id is not exist", async () => {
       const { body } = await request(app)
         .get("/api/users/99999/bookings")
         .expect(404);
 
-      expect(body.msg).toBe("Resource not found!");
+      expect(body.msg).toBe("User not found!");
     });
   });
 });

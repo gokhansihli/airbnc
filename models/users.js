@@ -1,12 +1,14 @@
 const db = require("../db/connection");
-const checkExists = require("../db/utils/check-exist");
+const checkExists = require("./utils-validations/check-exist");
+const {
+  validateFetchUserById,
+  validateUpdateUser,
+} = require("./utils-validations/users-validations");
 
 exports.fetchUserById = async (id) => {
-  if (isNaN(id)) {
-    return Promise.reject({ status: 400, msg: "Invalid user value!" });
-  }
+  await validateFetchUserById(id);
 
-  await checkExists("users", "user_id", id);
+  await checkExists("users", "user_id", id, "User not found!");
 
   let queryStr = `SELECT users.user_id, users.first_name, users.surname, 
         users.email, users.phone_number, users.avatar, users.created_at
@@ -21,15 +23,14 @@ exports.fetchUserById = async (id) => {
 };
 
 exports.updateUser = async (fieldstoUpdate, id) => {
-  await checkExists("users", "user_id", id);
+  await checkExists("users", "user_id", id, "User not found!");
 
   const allowedFields = ["first_name", "surname", "email", "phone", "avatar"];
 
   const fields = Object.keys(fieldstoUpdate);
   const validFields = fields.filter((field) => allowedFields.includes(field));
 
-  if (validFields.length === 0)
-    return Promise.reject({ status: 400, msg: "Invalid field!" });
+  await validateUpdateUser(validFields);
 
   const setUpdate = validFields
     .map((field, index) => {
