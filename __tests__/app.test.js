@@ -66,6 +66,16 @@ describe("app", () => {
         "https://example.com/images/cosy_family_house_1.jpg"
       );
     });
+    test("Responds with status 405 for invalid methods", async () => {
+      const methods = ["put", "patch", "delete", "post"];
+      methods.forEach(async (method) => {
+        const { body } = await request(app)
+          [method]("/api/properties")
+          .expect(405);
+
+        expect(body.msg).toBe("Invalid method!");
+      });
+    });
     describe("Optional Queries", () => {
       test("Should filter min cost per night", async () => {
         const { body } = await request(app)
@@ -158,6 +168,41 @@ describe("app", () => {
           .expect(200);
 
         expect(body.properties).toEqual([]);
+      });
+      test("Should filter by single amenity which contain that amenity", async () => {
+        const { body } = await request(app)
+          .get("/api/properties")
+          .query({ amenity: ["Kitchen"] });
+
+        expect(body.properties[0]).toHaveProperty("property_id", 2);
+        expect(body.properties[1]).toHaveProperty("property_id", 9);
+        expect(body.properties[2]).toHaveProperty("property_id", 1);
+        expect(body.properties[3]).toHaveProperty("property_id", 7);
+      });
+      test("Should filter by multiple amenities which contain that amenities", async () => {
+        const { body } = await request(app)
+          .get("/api/properties")
+          .query({ amenity: ["Kitchen", "TV"] });
+
+        expect(body.properties[0]).toHaveProperty("property_id", 1);
+        expect(body.properties[1]).toHaveProperty("property_id", 9);
+        expect(body.properties[2]).toHaveProperty("property_id", 4);
+      });
+      test("Responds with status 400 if single amenity value is invalid", async () => {
+        const { body } = await request(app)
+          .get("/api/properties")
+          .query({ amenity: ["abc"] })
+          .expect(400);
+
+        expect(body.msg).toBe("Invalid amenity value!");
+      });
+      test("Responds with status 400 if multiple amenity values are invalid", async () => {
+        const { body } = await request(app)
+          .get("/api/properties")
+          .query({ amenity: ["abc", "fsdfs"] })
+          .expect(400);
+
+        expect(body.msg).toBe("Invalid amenity value!");
       });
       test("Responds with status 404 if host is not exist", async () => {
         const { body } = await request(app)
@@ -301,6 +346,16 @@ describe("app", () => {
 
       expect(body.msg).toBe("Property not found!");
     });
+    test("Responds with status 405 for invalid methods", async () => {
+      const methods = ["put", "patch", "delete", "post"];
+      methods.forEach(async (method) => {
+        const { body } = await request(app)
+          [method]("/api/properties/1")
+          .expect(405);
+
+        expect(body.msg).toBe("Invalid method!");
+      });
+    });
   });
   describe("GET api/properties/:id/reviews", () => {
     test("Responds with status of 200", async () => {
@@ -344,47 +399,15 @@ describe("app", () => {
     test("Responds with empty array and status 200 if there is no review on property", async () => {
       await request(app).get("/api/properties/2/reviews").expect(200);
     });
-  });
-  describe("GET api/users/:id", () => {
-    test("Responds with status of 200", async () => {
-      await request(app).get("/api/users/1").expect(200);
-    });
-    test("User should be an object", async () => {
-      const { body } = await request(app).get("/api/users/1");
+    test("Responds with status 405 for invalid methods", async () => {
+      const methods = ["put", "patch", "delete"];
+      methods.forEach(async (method) => {
+        const { body } = await request(app)
+          [method]("/api/properties/2/reviews")
+          .expect(405);
 
-      const user = body.user;
-
-      expect(typeof user).toBe("object");
-    });
-    test("user should match with id", async () => {
-      const { body } = await request(app).get("/api/users/1");
-
-      const user = body.user;
-
-      expect(user.user_id).toBe(1);
-    });
-    test("User should has correct shape", async () => {
-      const { body } = await request(app).get("/api/users/1");
-
-      const user = body.user;
-
-      expect(typeof user.user_id).toBe("number");
-      expect(typeof user.first_name).toBe("string");
-      expect(typeof user.surname).toBe("string");
-      expect(typeof user.email).toBe("string");
-      expect(typeof user.phone_number).toBe("string");
-      expect(typeof user.avatar).toBe("string");
-      expect(typeof user.created_at).toBe("string");
-    });
-    test("Responds with status 400 if id is not a number", async () => {
-      const { body } = await request(app).get("/api/users/abc").expect(400);
-
-      expect(body.msg).toBe("User value should be a number!");
-    });
-    test("Responds with status 404 if user not exist", async () => {
-      const { body } = await request(app).get("/api/users/100000").expect(404);
-
-      expect(body.msg).toBe("User not found!");
+        expect(body.msg).toBe("Invalid method!");
+      });
     });
   });
   describe("POST api/properties/:id/reviews", () => {
@@ -514,6 +537,16 @@ describe("app", () => {
 
       expect(body.msg).toBe("Property not found!");
     });
+    test("Responds with status 405 for invalid methods", async () => {
+      const methods = ["put", "patch", "delete"];
+      methods.forEach(async (method) => {
+        const { body } = await request(app)
+          [method]("/api/properties/2/reviews")
+          .expect(405);
+
+        expect(body.msg).toBe("Invalid method!");
+      });
+    });
   });
   describe("DELETE api/reviews/:id", () => {
     test("Responds with status of 204", async () => {
@@ -547,6 +580,66 @@ describe("app", () => {
         .delete("/api/reviews/999")
         .expect(404);
       expect(body.msg).toBe("Review not found!");
+    });
+    test("Responds with status 405 for invalid methods", async () => {
+      const methods = ["put", "patch", "get", "post"];
+      methods.forEach(async (method) => {
+        const { body } = await request(app)
+          [method]("/api/reviews/1")
+          .expect(405);
+
+        expect(body.msg).toBe("Invalid method!");
+      });
+    });
+  });
+  describe("GET api/users/:id", () => {
+    test("Responds with status of 200", async () => {
+      await request(app).get("/api/users/1").expect(200);
+    });
+    test("User should be an object", async () => {
+      const { body } = await request(app).get("/api/users/1");
+
+      const user = body.user;
+
+      expect(typeof user).toBe("object");
+    });
+    test("user should match with id", async () => {
+      const { body } = await request(app).get("/api/users/1");
+
+      const user = body.user;
+
+      expect(user.user_id).toBe(1);
+    });
+    test("User should has correct shape", async () => {
+      const { body } = await request(app).get("/api/users/1");
+
+      const user = body.user;
+
+      expect(typeof user.user_id).toBe("number");
+      expect(typeof user.first_name).toBe("string");
+      expect(typeof user.surname).toBe("string");
+      expect(typeof user.email).toBe("string");
+      expect(typeof user.phone_number).toBe("string");
+      expect(typeof user.avatar).toBe("string");
+      expect(typeof user.created_at).toBe("string");
+    });
+    test("Responds with status 400 if id is not a number", async () => {
+      const { body } = await request(app).get("/api/users/abc").expect(400);
+
+      expect(body.msg).toBe("User value should be a number!");
+    });
+    test("Responds with status 404 if user not exist", async () => {
+      const { body } = await request(app).get("/api/users/100000").expect(404);
+
+      expect(body.msg).toBe("User not found!");
+    });
+    test("Responds with status 405 for invalid methods", async () => {
+      const methods = ["put", "post", "delete"];
+      methods.forEach(async (method) => {
+        const { body } = await request(app)[method]("/api/users/1").expect(405);
+
+        expect(body.msg).toBe("Invalid method!");
+      });
     });
   });
   describe("PATCH api/users/:id", () => {
@@ -619,6 +712,14 @@ describe("app", () => {
 
       expect(body.msg).toBe("User not found!");
     });
+    test("Responds with status 405 for invalid methods", async () => {
+      const methods = ["put", "delete", "post"];
+      methods.forEach(async (method) => {
+        const { body } = await request(app)[method]("/api/users/1").expect(405);
+
+        expect(body.msg).toBe("Invalid method!");
+      });
+    });
   });
   describe("POST api/properties/:id/favourite", () => {
     test("Responds with status of 201", async () => {
@@ -680,6 +781,16 @@ describe("app", () => {
 
       expect(body.msg).toBe("User not found!");
     });
+    test("Responds with status 405 for invalid methods", async () => {
+      const methods = ["put", "delete", "get", "patch"];
+      methods.forEach(async (method) => {
+        const { body } = await request(app)
+          [method]("/api/properties/1/favourite")
+          .expect(405);
+
+        expect(body.msg).toBe("Invalid method!");
+      });
+    });
   });
   describe("DELETE api/properties/:id/users/:id/favourite", () => {
     test("Responds with status of 204", async () => {
@@ -731,6 +842,16 @@ describe("app", () => {
 
       expect(body.msg).toBe("User not found!");
     });
+    test("Responds with status 405 for invalid methods", async () => {
+      const methods = ["put", "post", "get", "patch"];
+      methods.forEach(async (method) => {
+        const { body } = await request(app)
+          [method]("/api/properties/1/users/6/favourite")
+          .expect(405);
+
+        expect(body.msg).toBe("Invalid method!");
+      });
+    });
   });
   describe("GET api/amenities", () => {
     test("Responds with status of 200", async () => {
@@ -760,6 +881,16 @@ describe("app", () => {
       const { body } = await request(app).get("/api/amenities");
 
       expect(body.amenities.length).toBe(5);
+    });
+    test("Responds with status 405 for invalid methods", async () => {
+      const methods = ["put", "post", "delete", "patch"];
+      methods.forEach(async (method) => {
+        const { body } = await request(app)
+          [method]("/api/amenities")
+          .expect(405);
+
+        expect(body.msg).toBe("Invalid method!");
+      });
     });
   });
   describe("GET api/properties/:id/bookings", () => {
@@ -817,6 +948,16 @@ describe("app", () => {
         .expect(404);
 
       expect(body.msg).toBe("Property not found!");
+    });
+    test("Responds with status 405 for invalid methods", async () => {
+      const methods = ["put", "post", "delete", "patch"];
+      methods.forEach(async (method) => {
+        const { body } = await request(app)
+          [method]("/api/properties/1/bookings")
+          .expect(405);
+
+        expect(body.msg).toBe("Invalid method!");
+      });
     });
   });
   describe("POST api/properties/:id/booking", () => {
@@ -964,6 +1105,16 @@ describe("app", () => {
 
       expect(body.msg).toBe("Property not found!");
     });
+    test("Responds with status 405 for invalid methods", async () => {
+      const methods = ["put", "get", "delete", "patch"];
+      methods.forEach(async (method) => {
+        const { body } = await request(app)
+          [method]("/api/properties/1/booking")
+          .expect(405);
+
+        expect(body.msg).toBe("Invalid method!");
+      });
+    });
   });
   describe("DELETE api/bookings/:id", () => {
     test("Responds with status of 204", async () => {
@@ -998,6 +1149,16 @@ describe("app", () => {
         .delete("/api/bookings/999")
         .expect(404);
       expect(body.msg).toBe("Booking not found!");
+    });
+    test("Responds with status 405 for invalid methods", async () => {
+      const methods = ["put", "get", "post"];
+      methods.forEach(async (method) => {
+        const { body } = await request(app)
+          [method]("/api/bookings/1")
+          .expect(405);
+
+        expect(body.msg).toBe("Invalid method!");
+      });
     });
   });
   describe("PATCH api/bookings/:id", () => {
@@ -1074,6 +1235,16 @@ describe("app", () => {
 
       expect(body.msg).toBe("Booking not found!");
     });
+    test("Responds with status 405 for invalid methods", async () => {
+      const methods = ["put", "get", "post"];
+      methods.forEach(async (method) => {
+        const { body } = await request(app)
+          [method]("/api/bookings/1")
+          .expect(405);
+
+        expect(body.msg).toBe("Invalid method!");
+      });
+    });
   });
   describe("GET api/users/:id/bookings", () => {
     test("Responds with status of 200", async () => {
@@ -1124,6 +1295,16 @@ describe("app", () => {
         .expect(404);
 
       expect(body.msg).toBe("User not found!");
+    });
+    test("Responds with status 405 for invalid methods", async () => {
+      const methods = ["put", "delete", "post", "patch"];
+      methods.forEach(async (method) => {
+        const { body } = await request(app)
+          [method]("/api/users/1/bookings")
+          .expect(405);
+
+        expect(body.msg).toBe("Invalid method!");
+      });
     });
   });
 });

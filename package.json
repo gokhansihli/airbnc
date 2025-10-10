@@ -2,12 +2,15 @@
   "name": "airbnc",
   "version": "1.0.0",
   "description": "This is a portfolio website showcasing my projects as a developer.   The goal of this project is to highlight my work and make it easy for others to explore what I’ve built.",
-  "main": "index.js",
+  "main": "listen.js",
   "scripts": {
     "test": "jest",
     "test-app": "jest app",
-    "seed": "node ./db/seed-run",
-    "create-db": "psql -f db/create-database.sql",
+    "start": "node listen.js",
+    "seed-test": "NODE_ENV=test node ./db/seed-run",
+    "seed-dev": "NODE_ENV=development node ./db/seed-run",
+    "seed-prod": "NODE_ENV=production node ./db/seed-run",
+    "create-dbs": "psql -f db/create-database.sql",
     "dev": "nodemon listen.js"
   },
   "repository": {

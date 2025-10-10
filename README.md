@@ -16,7 +16,7 @@ npm install
 To create the database, run the SQL script:
 
 ```bash
-npm run create-db
+npm run create-dbs
 ```
 
 ## Database Connection

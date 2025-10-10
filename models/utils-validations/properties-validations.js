@@ -4,7 +4,8 @@ exports.ValidateFetchProperties = async (
   property_type,
   sort,
   order,
-  host
+  host,
+  amenity
 ) => {
   if ([minprice, maxprice].some((price) => price != null && isNaN(price)))
     return Promise.reject({ status: 400, msg: "Invalid price value!" });
@@ -28,6 +29,15 @@ exports.ValidateFetchProperties = async (
 
   if (host && isNaN(host))
     return Promise.reject({ status: 400, msg: "Invalid host value!" });
+
+  const amenities = ["WiFi", "TV", "Kitchen", "Parking", "Washer"];
+  if (Array.isArray(amenity)) {
+    //filter keeps elements where the condition is true
+    const invalidAmenities = amenity.filter((val) => !amenities.includes(val));
+    if (invalidAmenities.length > 0)
+      return Promise.reject({ status: 400, msg: "Invalid amenity value!" });
+  } else if (amenity && !amenities.includes(amenity))
+    return Promise.reject({ status: 400, msg: "Invalid amenity value!" });
 };
 
 exports.validateFetchPropertyById = async (id, user_id) => {

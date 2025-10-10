@@ -1,5 +1,9 @@
-exports.handlePathNotFound = async (req, res, next) => {
+exports.handlePathNotFound = (req, res, next) => {
   res.status(404).send({ msg: "Path not found!" });
+};
+
+exports.handleInvalidMethods = (req, res, next) => {
+  res.status(405).send({ msg: "Invalid method!" });
 };
 
 exports.handleCustomErrors = (err, req, res, next) => {
