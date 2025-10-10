@@ -1,7 +1,8 @@
 const { fetchProperties, fetchPropertyById } = require("../models/properties");
 
 exports.getProperties = async (req, res, next) => {
-  const { minprice, maxprice, property_type, sort, order, host } = req.query;
+  const { minprice, maxprice, property_type, sort, order, host, amenity } =
+    req.query;
 
   const properties = await fetchProperties(
     minprice,
@@ -9,7 +10,8 @@ exports.getProperties = async (req, res, next) => {
     property_type,
     sort,
     order,
-    host
+    host,
+    amenity
   );
 
   res.status(200).send({ properties });

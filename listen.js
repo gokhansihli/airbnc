@@ -1,5 +1,7 @@
 const app = require("./app");
 
-app.listen(9090, () => {
-  console.log("litening...");
+const { PORT = 9090 } = process.env;
+
+app.listen(PORT, () => {
+  console.log(`litening on ${PORT}...`);
 });

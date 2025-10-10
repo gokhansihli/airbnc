@@ -1,10 +1,11 @@
 const favouritesRouter = require("express").Router({ mergeParams: true });
 
-const {
-  postPropertyFavourite,
-  deletePropertyUserFavourite,
-} = require("../controllers/favourites");
+const { postPropertyFavourite } = require("../controllers/favourites");
+const { handleInvalidMethods } = require("../errors");
 
-favouritesRouter.route("/favourite").post(postPropertyFavourite);
+favouritesRouter
+  .route("/favourite")
+  .post(postPropertyFavourite)
+  .all(handleInvalidMethods);
 
 module.exports = favouritesRouter;

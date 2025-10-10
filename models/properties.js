@@ -11,7 +11,8 @@ exports.fetchProperties = async (
   property_type,
   sort = "favourite",
   order = "DESC",
-  host
+  host,
+  amenity
 ) => {
   const orderBy = order.toUpperCase();
   const sortLookUp = {
@@ -26,10 +27,9 @@ exports.fetchProperties = async (
     property_type,
     sort,
     order,
-    host
+    host,
+    amenity
   );
-
-  const amenities = ["WiFi", "TV", "Kitchen", "Parking", "Washer"];
 
   if (host !== undefined) {
     await checkExists("users", "user_id", host);
@@ -77,6 +77,25 @@ exports.fetchProperties = async (
     whereConditions.push(`properties.host_id = $${queryValues.length}`);
   }
 
+  if (amenity !== undefined) {
+    queryStr += `
+    JOIN properties_amenities ON properties.property_id = properties_amenities.property_id
+    JOIN amenities ON properties_amenities.amenity_slug = amenities.amenity`;
+  }
+
+  if (Array.isArray(amenity)) {
+    let startIndex = queryValues.length + 1;
+
+    amenity.map((value) => queryValues.push(value));
+    const placeholders = amenity.map((val, index) => `$${startIndex + index}`);
+    whereConditions.push(`amenities.amenity IN (${placeholders.join(", ")})`);
+  }
+
+  if (!Array.isArray(amenity) && amenity !== undefined) {
+    queryValues.push(amenity);
+    whereConditions.push(`amenities.amenity = $${queryValues.length}`);
+  }
+
   if (whereConditions.length) {
     queryStr += ` WHERE ${whereConditions.join(" AND ")}`;
   }
@@ -84,6 +103,10 @@ exports.fetchProperties = async (
   queryStr += `
     GROUP BY properties.property_id, properties.name, properties.location, properties.price_per_night, users.first_name, users.surname
   `;
+
+  if (Array.isArray(amenity))
+    //After grouping rows, for 'and' logic, counting distinct amenities per group
+    queryStr += `HAVING COUNT(DISTINCT amenities.amenity) = ${amenity.length}`;
 
   queryStr += ` ORDER BY ${sortLookUp[sort]} ${orderBy}`;
 
