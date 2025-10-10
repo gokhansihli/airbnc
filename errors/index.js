@@ -11,10 +11,10 @@ exports.handleCustomErrors = (err, req, res, next) => {
 };
 
 exports.handleBadRequests = (err, req, res, next) => {
-  const codes = ["23502", "23503", "22P02"];
-
-  if (codes.includes(err.code)) {
+  if (err.code === "23502" || err.code === "22P02") {
     res.status(400).send({ msg: "Bad Request!" });
+  } else if (err.code === "23503") {
+    res.status(404).send({ msg: "Bad Request!" });
   } else {
     next(err);
   }

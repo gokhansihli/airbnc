@@ -5,35 +5,26 @@ const {
 } = require("../models/reviews");
 
 exports.getPropertyReviews = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const { reviews, average_rating } = await fetchPropertyReviews(id);
-    res.status(200).send({ reviews, average_rating });
-  } catch (error) {
-    next(error);
-  }
+  const { id } = req.params;
+
+  const { reviews, average_rating } = await fetchPropertyReviews(id);
+
+  res.status(200).send({ reviews, average_rating });
 };
 
 exports.postPropertyReview = async (req, res, next) => {
   const { guest_id, rating, comment } = req.body;
   const { id } = req.params;
 
-  try {
-    const review = await insertPropertyReview(id, guest_id, rating, comment);
+  const review = await insertPropertyReview(id, guest_id, rating, comment);
 
-    res.status(201).send({ review });
-  } catch (error) {
-    next(error);
-  }
+  res.status(201).send({ review });
 };
 
 exports.deleteReview = async (req, res, next) => {
   const { id } = req.params;
 
-  try {
-    const review = await removeReview(id);
-    res.status(204).send({ review });
-  } catch (error) {
-    next(error);
-  }
+  const review = await removeReview(id);
+
+  res.status(204).send({ review });
 };
