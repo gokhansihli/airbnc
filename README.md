@@ -24,6 +24,26 @@ npm run create-dbs
 This project uses a PostgreSQL connection pool with the `pg` package.  
 Credentials are loaded from a `.env` file using the `dotenv` package.
 
+## Seed Database
+
+To seed test database:
+
+```bash
+npm run seed-test
+```
+
+To seed development database:
+
+```bash
+npm run seed-dev
+```
+
+To seed production database;
+
+```bash
+npm run seed-prod
+```
+
 ### .env Example
 
 PGDATABASE=your_database_name
@@ -49,3 +69,11 @@ Or just to run the app:
 ```bash
 npm run test-app
 ```
+
+## Live API
+
+To view the live API:  
+[Click here to access the Portfolio Backend API](https://airbnc-b0sn.onrender.com)
+
+To test specific endpoints, add `/api/<endpoint>` to the end of the URL.  
+For example: `https://airbnc-b0sn.onrender.com/api/properties`
