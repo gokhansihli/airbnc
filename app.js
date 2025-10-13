@@ -13,11 +13,11 @@ const app = express();
 
 app.use(express.json());
 
-app.use("/api", apiRouter);
-
 app.use(express.static(path.join(__dirname, "public")));
 
-app.all("/*path", handlePathNotFound);
+app.use("/api", apiRouter);
+
+app.all("/*", handlePathNotFound);
 
 app.use(handleCustomErrors);
 app.use(handleBadRequests);
