@@ -18,7 +18,7 @@ app.use(express.json());
 
 app.use("/api", apiRouter);
 
-app.all("/*path", handlePathNotFound);
+app.all("/*", handlePathNotFound);
 
 app.use(handleCustomErrors);
 app.use(handleBadRequests);
