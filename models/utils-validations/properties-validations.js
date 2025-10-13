@@ -1,3 +1,5 @@
+const db = require("../../db/connection");
+
 exports.ValidateFetchProperties = async (
   minprice,
   maxprice,
@@ -30,7 +32,11 @@ exports.ValidateFetchProperties = async (
   if (host && isNaN(host))
     return Promise.reject({ status: 400, msg: "Invalid host value!" });
 
-  const amenities = ["WiFi", "TV", "Kitchen", "Parking", "Washer"];
+  const { rows } = await db.query(`SELECT * FROM amenities;`);
+
+  const amenities = rows.map((row) => row.amenity);
+
+  // const amenities = ["WiFi", "TV", "Kitchen", "Parking", "Washer"];
   if (Array.isArray(amenity)) {
     //filter keeps elements where the condition is true
     const invalidAmenities = amenity.filter((val) => !amenities.includes(val));
