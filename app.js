@@ -13,13 +13,11 @@ const app = express();
 
 app.use(express.json());
 
-console.log("Serving static files from:", path.join(__dirname, "public"));
+app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/api", apiRouter);
 
 app.all("/*path", handlePathNotFound);
-
-app.use(express.static(path.join(__dirname, "public")));
 
 app.use(handleCustomErrors);
 app.use(handleBadRequests);
