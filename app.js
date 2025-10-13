@@ -7,16 +7,15 @@ const {
   handleCustomErrors,
   handleServerErrors,
 } = require("./errors/index");
-
-const app = express();
-
 const apiRouter = require("./routes/api-router");
 
-app.use(express.static(path.join(__dirname, "public")));
+const app = express();
 
 app.use(express.json());
 
 app.use("/api", apiRouter);
+
+app.use(express.static(path.join(__dirname, "public")));
 
 app.all("/*path", handlePathNotFound);
 
