@@ -12,7 +12,7 @@ const apiRouter = require("./routes/api-router");
 
 const app = express();
 
-app.use("/static", express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "public")));
 
 app.use(express.json());
 
