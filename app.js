@@ -21,7 +21,7 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-app.all("/*path", handlePathNotFound);
+app.all("/*", handlePathNotFound);
 
 app.use(handleCustomErrors);
 app.use(handleBadRequests);
