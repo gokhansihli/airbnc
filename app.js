@@ -8,17 +8,17 @@ const {
   handleServerErrors,
 } = require("./errors/index");
 
-const apiRouter = require("./routes/api-router");
-
 const app = express();
 
-app.use(express.static(path.join(__dirname, "/public")));
+app.use(express.static(path.join(__dirname, "public")));
+
+const apiRouter = require("./routes/api-router");
 
 app.use(express.json());
 
 app.use("/api", apiRouter);
 
-app.all("/*", handlePathNotFound);
+app.all("/*path", handlePathNotFound);
 
 app.use(handleCustomErrors);
 app.use(handleBadRequests);
