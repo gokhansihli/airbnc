@@ -1,0 +1,19 @@
+body {
+  color: #333;
+  background-color: #f9f9f9;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 0.95rem;
+}
+
+section pre {
+  color: cornflowerblue;
+  background-color: rgb(241, 241, 243);
+  padding: 10px;
+  margin: 20px 0;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.api-url {
+  color: cornflowerblue;
+}
