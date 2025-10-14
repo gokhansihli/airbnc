@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
     <title>Airbnc Project Endpoints</title>
   </head>
   <body>
@@ -13,15 +14,13 @@
         endpoints.
       </p>
     </header>
-    <section style="font-family: Verdana, Geneva, Tahoma, sans-serif">
+    <section>
       <h2>Example of endpoints</h2>
       <h3>GET /api/properties</h3>
       <p>Example request:</p>
-      <p style="color: cornflowerblue">
-        https://airbnc-b0sn.onrender.com/api/properties
-      </p>
+      <p class="api-url">https://airbnc-b0sn.onrender.com/api/properties</p>
       <p>Example response:</p>
-      <pre style="color: cornflowerblue">
+      <pre>
         {
             "properties": [
                 {
@@ -34,18 +33,17 @@
                     "avg_rating": 5,
                     "image": "https://images.unsplash.com/photo-1720877851762-1fd589e96311?q=80&w=3200&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 },
+                ...
             ]
         }
       </pre>
     </section>
-    <section style="font-family: Verdana, Geneva, Tahoma, sans-serif">
+    <section>
       <h3>GET /api/properties/:id</h3>
       <p>Example request:</p>
-      <p style="color: cornflowerblue">
-        https://airbnc-b0sn.onrender.com/api/properties/1
-      </p>
+      <p class="api-url">https://airbnc-b0sn.onrender.com/api/properties/1</p>
       <p>Example response:</p>
-      <pre style="color: cornflowerblue">
+      <pre>
         {
             "property": {
                 "property_id": 3,
@@ -71,14 +69,14 @@
         }
       </pre>
     </section>
-    <section style="font-family: Verdana, Geneva, Tahoma, sans-serif">
+    <section>
       <h3>GET /api/properties/:id/bookings</h3>
       <p>Example request:</p>
-      <p style="color: cornflowerblue">
+      <p class="api-url">
         https://airbnc-b0sn.onrender.com/api/properties/1/bookings
       </p>
       <p>Example response:</p>
-      <pre style="color: cornflowerblue">
+      <pre>
         {
             "bookings": [
                 {
@@ -98,14 +96,14 @@
         }
       </pre>
     </section>
-    <section style="font-family: Verdana, Geneva, Tahoma, sans-serif">
+    <section>
       <h3>GET /api/properties/:id/reviews</h3>
       <p>Example request:</p>
-      <p style="color: cornflowerblue">
+      <p class="api-url">
         https://airbnc-b0sn.onrender.com/api/properties/1/reviews
       </p>
       <p>Example response:</p>
-      <pre style="color: cornflowerblue">
+      <pre>
         {
             "reviews": [
                 {
@@ -121,14 +119,12 @@
         }
       </pre>
     </section>
-    <section style="font-family: Verdana, Geneva, Tahoma, sans-serif">
+    <section>
       <h3>GET /api/users/:id</h3>
       <p>Example request:</p>
-      <p style="color: cornflowerblue">
-        https://airbnc-b0sn.onrender.com/api/users/1
-      </p>
+      <p class="api-url">https://airbnc-b0sn.onrender.com/api/users/1</p>
       <p>Example response:</p>
-      <pre style="color: cornflowerblue">
+      <pre>
         {
             "user": {
                 "user_id": 1,
@@ -142,14 +138,14 @@
         }
       </pre>
     </section>
-    <section style="font-family: Verdana, Geneva, Tahoma, sans-serif">
+    <section>
       <h3>GET /api/users/:id/bookings</h3>
       <p>Example request:</p>
-      <p style="color: cornflowerblue">
+      <p class="api-url">
         https://airbnc-b0sn.onrender.com/api/users/1/bookings
       </p>
       <p>Example response:</p>
-      <pre style="color: cornflowerblue">
+      <pre>
         {
             "bookings": [
                 {
@@ -166,14 +162,12 @@
         }
       </pre>
     </section>
-    <section style="font-family: Verdana, Geneva, Tahoma, sans-serif">
+    <section>
       <h3>GET /api/amenities</h3>
       <p>Example request:</p>
-      <p style="color: cornflowerblue">
-        https://airbnc-b0sn.onrender.com/api/amenities
-      </p>
+      <p class="api-url">https://airbnc-b0sn.onrender.com/api/amenities</p>
       <p>Example response:</p>
-      <pre style="color: cornflowerblue">
+      <pre>
         {
             "amenities": [
                 {
