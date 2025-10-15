@@ -172,7 +172,7 @@ describe("app", () => {
       test("Should filter by single amenity which contain that amenity", async () => {
         const { body } = await request(app)
           .get("/api/properties")
-          .query({ amenity: ["Kitchen"] });
+          .query({ amenity: "Kitchen" });
 
         expect(body.properties[0]).toHaveProperty("property_id", 2);
         expect(body.properties[1]).toHaveProperty("property_id", 9);
@@ -191,7 +191,7 @@ describe("app", () => {
       test("Responds with status 400 if single amenity value is invalid", async () => {
         const { body } = await request(app)
           .get("/api/properties")
-          .query({ amenity: ["abc"] })
+          .query({ amenity: "abc" })
           .expect(400);
 
         expect(body.msg).toBe("Invalid amenity value!");
