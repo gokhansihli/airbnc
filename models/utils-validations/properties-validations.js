@@ -12,8 +12,12 @@ exports.ValidateFetchProperties = async (
   if ([minprice, maxprice].some((price) => price != null && isNaN(price)))
     return Promise.reject({ status: 400, msg: "Invalid price value!" });
 
-  const propertyTypes = ["APARTMENT", "HOUSE", "STUDIO"];
-  if (property_type && !propertyTypes.includes(property_type.toUpperCase()))
+  const { rows: propertyRows } = await db.query(
+    `SELECT * FROM property_types;`
+  );
+  const propertyTypes = propertyRows.map((row) => row.property_type);
+
+  if (property_type && !propertyTypes.includes(property_type))
     return Promise.reject({ status: 400, msg: "Invalid property type value!" });
 
   const allowedOrder = ["ASC", "DESC"];
@@ -32,8 +36,8 @@ exports.ValidateFetchProperties = async (
   if (host && isNaN(host))
     return Promise.reject({ status: 400, msg: "Invalid host value!" });
 
-  const { rows } = await db.query(`SELECT * FROM amenities;`);
-  const amenities = rows.map((row) => row.amenity);
+  const { rows: amenityRows } = await db.query(`SELECT * FROM amenities;`);
+  const amenities = amenityRows.map((row) => row.amenity);
 
   if (Array.isArray(amenity)) {
     //filter keeps elements where the condition is true
