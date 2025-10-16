@@ -8,20 +8,48 @@
   </head>
   <body>
     <header>
-      <h1>Welcome to Airbnc API</h1>
+      <h1>AIRBNC API</h1>
       <p>
-        This API provides data about the project that you can request using http
-        endpoints.
+        This REST API provides access to data for the Airbnc project and serves
+        as the backend service that manages and delivers all project
+        information.<br /><br />
+        You can use the available HTTP endpoints to retrieve information about
+        properties, users, bookings, reviews, favourites, amenities and optional
+        queries.<br /><br />
+        This API is publicly accessible, so anyone can explore the endpoints and
+        fetch data directly for development or testing purposes.<br /><br />
+        <i>Use Navigation Bar above to see all requests.</i> <br /><br />
+
+        Airbnc API url:
+        <a href="https://airbnc-b0sn.onrender.com"
+          >https://airbnc-b0sn.onrender.com</a
+        ><br /><br />
+
+        Source code on GitHub:
+        <a href="https://github.com/gokhansihli/airbnc"
+          >https://github.com/gokhansihli/airbnc</a
+        >
       </p>
     </header>
-    <section>
-      <h2>Example of endpoints</h2>
-      <h3>GET /api/properties</h3>
-      <p>Example request:</p>
-      <p class="api-url">https://airbnc-b0sn.onrender.com/api/properties</p>
-      <p>Example response:</p>
-      <pre>
-        {
+    <nav>
+      <a href="#get-requests"><strong>GET requests</strong></a>
+      <a href="#post-requests"><strong>POST requests</strong></a>
+      <a href="#patch-requests"> <strong>PATCH requests</strong></a>
+      <a href="#delete-requests"><strong>DELETE requests</strong></a>
+    </nav>
+    <h2>Example of requests</h2>
+    <div id="get-requests" class="section-container">
+      <section>
+        <h3>GET /api/properties</h3>
+        <p>Example request:</p>
+        <a
+          href="https://airbnc-b0sn.onrender.com/api/properties"
+          class="api-url"
+          >https://airbnc-b0sn.onrender.com/api/properties</a
+        >
+        <p>Example response:</p>
+        <pre>
+          {
             "properties": [
                 {
                     "property_id": 10,
@@ -31,157 +59,358 @@
                     "host": "Isabella Martinez",
                     "favourited_count": "5",
                     "avg_rating": 5,
-                    "image": "https://images.unsplash.com/photo-1720877851762-1fd589e96311?q=80&w=3200&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    "image": "https://images.unsplash.com/photo..."
                 },
                 ...
             ]
-        }
-      </pre>
-    </section>
-    <section>
-      <h3>GET /api/properties/:id</h3>
-      <p>Example request:</p>
-      <p class="api-url">https://airbnc-b0sn.onrender.com/api/properties/1</p>
-      <p>Example response:</p>
-      <pre>
+          }
+        </pre>
+        <h4>Optional Query Parameters:</h4>
+        <p><strong>order: </strong>Orders properties by DESC and ASC.</p>
+        <p>
+          <strong>sort: </strong>Sorts properties by price_per_night /
+          avg_rating / favourited_count.
+        </p>
+        <p>
+          <strong>minprice: </strong>Filters properties by any price number of
+          per night.
+        </p>
+        <p>
+          <strong>maxprice: </strong>Filters properties by any price number of
+          per night.
+        </p>
+        <p>
+          <strong>property_type: </strong>Filters properties by property type
+          like Apartment or Loft.
+        </p>
+        <p><strong>host: </strong>Filters properties by host_id number.</p>
+        <p><strong>amenity: </strong>Filters properties by amenities.</p>
+        <br />
+        <p>Example request:</p>
+        <a
+          href="https://airbnc-b0sn.onrender.com/api/properties?amenity=Kitchen&amenity=Iron"
+          class="api-url"
+          >https://airbnc-b0sn.onrender.com/api/properties?amenity=Kitchen&amenity=Iron</a
+        ><br /><br />
+      </section>
+      <section>
+        <h3>GET /api/properties/:id</h3>
+        <p>Example request:</p>
+        <a
+          href="https://airbnc-b0sn.onrender.com/api/properties/1"
+          class="api-url"
+          >https://airbnc-b0sn.onrender.com/api/properties/1</a
+        >
+        <p>Example response:</p>
+        <pre>
+          {
+              "property": {
+                  "property_id": 3,
+                  "property_name": "Chic Studio Near the Beach",
+                  "location": "Brighton, UK",
+                  "price_per_night": 90,
+                  "description": "A modern, cosy studio just steps away from the sea.",
+                  "host": "Alice Johnson",
+                  "host_avatar": "https://images.unsplash.com/photo...",
+                  "favourited_count": "0",
+                  "images": [
+                      "https://images.unsplash.com/photo...",
+                      ...
+                  ],
+                  "amenities": [
+                      "Mini fridge",
+                      "TV",
+                      "WiFi"
+                  ]
+              }
+          }
+        </pre>
+      </section>
+      <section>
+        <h3>GET /api/properties/:id/bookings</h3>
+        <p>Example request:</p>
+        <a
+          href="https://airbnc-b0sn.onrender.com/api/properties/1/bookings"
+          class="api-url"
+          >https://airbnc-b0sn.onrender.com/api/properties/1/bookings</a
+        >
+        <p>Example response:</p>
+        <pre>
+          {
+              "bookings": [
+                  {
+                      "booking_id": 22,
+                      "check_in_date": "2025-11-15T00:00:00.000Z",
+                      "check_out_date": "2025-11-20T00:00:00.000Z",
+                      "created_at": "2025-10-13T17:19:54.975Z"
+                  },
+                  {
+                      "booking_id": 1,
+                      "check_in_date": "2025-02-15T00:00:00.000Z",
+                      "check_out_date": "2025-02-20T00:00:00.000Z",
+                      "created_at": "2025-10-13T17:19:54.975Z"
+                  }
+              ],
+              "property_id": 1
+          }
+        </pre>
+      </section>
+      <section>
+        <h3>GET /api/properties/:id/reviews</h3>
+        <p>Example request:</p>
+        <a
+          href="https://airbnc-b0sn.onrender.com/api/properties/1/reviews"
+          class="api-url"
+          >https://airbnc-b0sn.onrender.com/api/properties/1/reviews</a
+        >
+        <p>Example response:</p>
+        <pre>
+          {
+              "reviews": [
+                  {
+                      "review_id": 1,
+                      "comment": "Great place to stay! The apartment was clean...",
+                      "rating": 5,
+                      "created_at": "2024-03-15T10:24:00.000Z",
+                      "guest": "Bob Smith",
+                      "guest_avatar": "https://images.unsplash.com/photo..."
+                  }
+              ],
+              "average_rating": 5
+          }
+        </pre>
+      </section>
+      <section>
+        <h3>GET /api/users/:id</h3>
+        <p>Example request:</p>
+        <a href="https://airbnc-b0sn.onrender.com/api/users/1" class="api-url"
+          >https://airbnc-b0sn.onrender.com/api/users/1</a
+        >
+        <p>Example response:</p>
+        <pre>
+          {
+              "user": {
+                  "user_id": 1,
+                  "first_name": "Alice",
+                  "surname": "Johnson",
+                  "email": "alice@example.com",
+                  "phone_number": "+44 7000 111111",
+                  "avatar": "https://images.unsplash.com/photo...",
+                  "created_at": "2025-10-13T17:19:54.964Z"
+              }
+          }
+        </pre>
+      </section>
+      <section>
+        <h3>GET /api/users/:id/bookings</h3>
+        <p>Example request:</p>
+        <a
+          href="https://airbnc-b0sn.onrender.com/api/users/1/bookings"
+          class="api-url"
+          >https://airbnc-b0sn.onrender.com/api/users/1/bookings</a
+        >
+        <p>Example response:</p>
+        <pre>
+          {
+              "bookings": [
+                  {
+                      "booking_id": 24,
+                      "check_in_date": "2025-01-10T00:00:00.000Z",
+                      "check_out_date": "2025-01-15T00:00:00.000Z",
+                      "property_id": 3,
+                      "property_name": "Chic Studio Near the Beach",
+                      "host": "Bob Smith",
+                      "image": "https://images.unsplash.com/photo..."
+                  },
+                  ...
+              ]
+          }
+        </pre>
+      </section>
+      <section>
+        <h3>GET /api/amenities</h3>
+        <p>Example request:</p>
+        <a href="https://airbnc-b0sn.onrender.com/api/amenities" class="api-url"
+          >https://airbnc-b0sn.onrender.com/api/amenities</a
+        >
+        <p>Example response:</p>
+        <pre>
+          {
+              "amenities": [
+                  {
+                      "amenity_slug": "WiFi",
+                      "amenity_text": "WiFi"
+                  },
+                  {
+                      "amenity_slug": "TV",
+                      "amenity_text": "TV"
+                  },
+                  ...
+              ]
+          }
+        </pre>
+      </section>
+    </div>
+    <div id="post-requests" class="section-container">
+      <section>
+        <h3>POST /api/properties/:id/reviews</h3>
+        <p>Example request:</p>
+        <pre>
         {
-            "property": {
-                "property_id": 3,
-                "property_name": "Chic Studio Near the Beach",
-                "location": "Brighton, UK",
-                "price_per_night": 90,
-                "description": "A modern, cosy studio just steps away from the sea.",
-                "host": "Alice Johnson",
-                "host_avatar": "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                "favourited_count": "0",
-                "images": [
-                    "https://images.unsplash.com/photo-1471086569966-db3eebc25a59?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    "https://images.unsplash.com/photo-1650772263831-41aa1b2c80d0?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                    "https://images.unsplash.com/photo-1727270921836-3d51d25d9e33?q=80&w=3099&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                ],
-                "amenities": [
-                    "Mini fridge",
-                    "TV",
-                    "WiFi"
-                ]
+            "guest_id": 1,
+            "rating": 4,
+            "comment": "Nice to see this place."
+        }
+      </pre
+        >
+        <p>Example response:</p>
+        <pre>
+        {
+            "review": {
+                "review_id": 11,
+                "property_id": 1,
+                "guest_id": 1,
+                "rating": 4,
+                "comment": "Nice to see this place.",
+                "created_at": "2025-10-16T16:25:11.160Z"
             }
         }
-      </pre>
-    </section>
-    <section>
-      <h3>GET /api/properties/:id/bookings</h3>
-      <p>Example request:</p>
-      <p class="api-url">
-        https://airbnc-b0sn.onrender.com/api/properties/1/bookings
-      </p>
-      <p>Example response:</p>
-      <pre>
+      </pre
+        >
+      </section>
+      <section>
+        <h3>POST api/properties/:id/booking</h3>
+        <p>Example request:</p>
+        <pre>
         {
-            "bookings": [
-                {
-                    "booking_id": 22,
-                    "check_in_date": "2025-11-15T00:00:00.000Z",
-                    "check_out_date": "2025-11-20T00:00:00.000Z",
-                    "created_at": "2025-10-13T17:19:54.975Z"
-                },
-                {
-                    "booking_id": 1,
-                    "check_in_date": "2025-02-15T00:00:00.000Z",
-                    "check_out_date": "2025-02-20T00:00:00.000Z",
-                    "created_at": "2025-10-13T17:19:54.975Z"
-                }
-            ],
-            "property_id": 1
+            "guest_id": 2,
+            "check_in_date": "2026-12-01T00:00:00.000Z",
+            "check_out_date": "2026-12-05T00:00:00.000Z"
         }
-      </pre>
-    </section>
-    <section>
-      <h3>GET /api/properties/:id/reviews</h3>
-      <p>Example request:</p>
-      <p class="api-url">
-        https://airbnc-b0sn.onrender.com/api/properties/1/reviews
-      </p>
-      <p>Example response:</p>
-      <pre>
+      </pre
+        >
+        <p>Example response:</p>
+        <pre>
         {
-            "reviews": [
-                {
-                    "review_id": 1,
-                    "comment": "Great place to stay! The apartment was clean, modern, and very comfortable. Its location in the heart of the city made it extremely convenient to explore nearby attractions, restaurants, and shops. Would definitely stay here again.",
-                    "rating": 5,
-                    "created_at": "2024-03-15T10:24:00.000Z",
-                    "guest": "Bob Smith",
-                    "guest_avatar": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                }
-            ],
-            "average_rating": 5
+            "msg": "Booking successful",
+            "booking_id": 27
         }
-      </pre>
-    </section>
-    <section>
-      <h3>GET /api/users/:id</h3>
-      <p>Example request:</p>
-      <p class="api-url">https://airbnc-b0sn.onrender.com/api/users/1</p>
-      <p>Example response:</p>
-      <pre>
+      </pre
+        >
+      </section>
+      <section>
+        <h3>POST api/properties/:id/favourite</h3>
+        <p>Example request:</p>
+        <pre>
+        {
+            "guest_id": 1
+        }
+      </pre
+        >
+        <p>Example response:</p>
+        <pre>
+        {
+            "msg": "Property favourited successfully.",
+            "favorite_id": 38
+        }
+      </pre
+        >
+      </section>
+    </div>
+    <div id="patch-requests" class="section-container">
+      <section>
+        <h3>PATCH api/users/:id</h3>
+        <p>Example request:</p>
+        <pre>
+        {
+            "first_name": "David",
+            "surname": "Aley",
+            "email": "example@example.com",
+            "phone": "+44 07123456",
+            "avatar": "https://e.com/images/j.jpg"
+        }
+      </pre
+        >
+        <p>Example response:</p>
+        <pre>
         {
             "user": {
                 "user_id": 1,
-                "first_name": "Alice",
-                "surname": "Johnson",
-                "email": "alice@example.com",
-                "phone_number": "+44 7000 111111",
-                "avatar": "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                "created_at": "2025-10-13T17:19:54.964Z"
+                "first_name": "David",
+                "surname": "Aley",
+                "email": "example@example.com",
+                "phone": "+44 07123456",
+                "avatar": "https://e.com/images/j.jpg",
+                "is_host": true,
+                "created_at": "2025-10-16T16:47:59.860Z"
             }
         }
-      </pre>
-    </section>
-    <section>
-      <h3>GET /api/users/:id/bookings</h3>
-      <p>Example request:</p>
-      <p class="api-url">
-        https://airbnc-b0sn.onrender.com/api/users/1/bookings
-      </p>
-      <p>Example response:</p>
-      <pre>
+      </pre
+        >
+      </section>
+      <section>
+        <h3>PATCH api/bookings/:id</h3>
+        <p>Example request:</p>
+        <pre>
         {
-            "bookings": [
-                {
-                    "booking_id": 24,
-                    "check_in_date": "2025-01-10T00:00:00.000Z",
-                    "check_out_date": "2025-01-15T00:00:00.000Z",
-                    "property_id": 3,
-                    "property_name": "Chic Studio Near the Beach",
-                    "host": "Bob Smith",
-                    "image": "https://images.unsplash.com/photo-1650772263831-41aa1b2c80d0?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                },
-                ...
-            ]
+            "check_in_date": "2025-12-01T00:00:00.000Z",
+            "check_out_date": "2025-12-05T00:00:00.000Z"
         }
-      </pre>
-    </section>
-    <section>
-      <h3>GET /api/amenities</h3>
-      <p>Example request:</p>
-      <p class="api-url">https://airbnc-b0sn.onrender.com/api/amenities</p>
-      <p>Example response:</p>
-      <pre>
+      </pre
+        >
+        <p>Example response:</p>
+        <pre>
         {
-            "amenities": [
-                {
-                    "amenity_slug": "WiFi",
-                    "amenity_text": "WiFi"
-                },
-                {
-                    "amenity_slug": "TV",
-                    "amenity_text": "TV"
-                },
-                ...
-            ]
+            "booking": {
+                "booking_id": 1,
+                "property_id": 1,
+                "guest_id": 2,
+                "check_in_date": "2025-12-01T00:00:00.000Z",
+                "check_out_date": "2025-12-05T00:00:00.000Z",
+                "created_at": "2025-10-16T16:52:22.099Z"
+            }
         }
+      </pre
+        >
+      </section>
+    </div>
+    <div id="delete-requests" class="section-container">
+      <section>
+        <h3>DELETE api/properties/:id/users/:id/favourite</h3>
+        <p>Example request:</p>
+        <pre>
+        DELETE api/properties/1/users/6/favourite
+      </pre
+        >
+        <p>Example response:</p>
+        <pre>
+        <i>(No content)</i>
       </pre>
-    </section>
+      </section>
+      <section>
+        <h3>DELETE api/reviews/:id</h3>
+        <p>Example request:</p>
+        <pre>
+        DELETE api/reviews/1
+      </pre
+        >
+        <p>Example response:</p>
+        <pre>
+        <i>(No content)</i>
+      </pre>
+      </section>
+      <section>
+        <h3>DELETE api/bookings/:id</h3>
+        <p>Example request:</p>
+        <pre>
+        DELETE api/bookings/1
+      </pre
+        >
+        <p>Example response:</p>
+        <pre>
+        <i>(No content)</i>
+      </pre>
+      </section>
+    </div>
   </body>
 </html>
