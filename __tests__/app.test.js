@@ -102,7 +102,7 @@ describe("app", () => {
       test("Should filter through property type", async () => {
         const { body } = await request(app)
           .get("/api/properties")
-          .query({ property_type: "apartment" });
+          .query({ property_type: "Apartment" });
 
         const properties = body.properties;
 
