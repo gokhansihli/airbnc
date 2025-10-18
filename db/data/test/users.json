@@ -5,7 +5,8 @@
     "email": "alice@example.com",
     "phone_number": "+44 7000 111111",
     "is_host": true,
-    "avatar": "https://example.com/images/alice.jpg"
+    "avatar": "https://example.com/images/alice.jpg",
+    "password_hash": "12345"
   },
   {
     "first_name": "Bob",
@@ -13,7 +14,8 @@
     "email": "bob@example.com",
     "phone_number": "+44 7000 222222",
     "is_host": false,
-    "avatar": "https://example.com/images/bob.jpg"
+    "avatar": "https://example.com/images/bob.jpg",
+    "password_hash": "12345"
   },
   {
     "first_name": "Emma",
@@ -21,7 +23,8 @@
     "email": "emma@example.com",
     "phone_number": "+44 7000 333333",
     "is_host": true,
-    "avatar": "https://example.com/images/emma.jpg"
+    "avatar": "https://example.com/images/emma.jpg",
+    "password_hash": "12345"
   },
   {
     "first_name": "Frank",
@@ -29,7 +32,8 @@
     "email": "frank@example.com",
     "phone_number": "+44 7000 444444",
     "is_host": false,
-    "avatar": "https://example.com/images/frank.jpg"
+    "avatar": "https://example.com/images/frank.jpg",
+    "password_hash": "12345"
   },
   {
     "first_name": "Isabella",
@@ -37,7 +41,8 @@
     "email": "isabella@example.com",
     "phone_number": "+44 7000 555555",
     "is_host": true,
-    "avatar": "https://example.com/images/isabella.jpg"
+    "avatar": "https://example.com/images/isabella.jpg",
+    "password_hash": "12345"
   },
   {
     "first_name": "Rachel",
@@ -45,7 +50,8 @@
     "email": "rachel@example.com",
     "phone_number": "+44 7000 666666",
     "is_host": false,
-    "avatar": "https://example.com/images/rachel.jpg"
+    "avatar": "https://example.com/images/rachel.jpg",
+    "password_hash": "12345"
   },
   {
     "first_name": "Laura",
@@ -53,7 +59,8 @@
     "email": "laura@example.com",
     "phone_number": "+44 7000 777777",
     "is_host": false,
-    "avatar": "https://example.com/images/laura.jpg"
+    "avatar": "https://example.com/images/laura.jpg",
+    "password_hash": "12345"
   },
   {
     "first_name": "Michael",
@@ -61,6 +68,7 @@
     "email": "michael@example.com",
     "phone_number": "+44 7000 888888",
     "is_host": false,
-    "avatar": "https://example.com/images/michael.jpg"
+    "avatar": "https://example.com/images/michael.jpg",
+    "password_hash": "12345"
   }
 ]

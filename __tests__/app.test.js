@@ -1,9 +1,15 @@
+jest.mock("../routes/utils/auth-middleware", () => ({
+  verifyToken: (req, res, next) => next(),
+}));
+
 require("jest-sorted");
 const request = require("supertest");
 const app = require("../app");
 const db = require("../db/connection");
 const seed = require("../db/seed");
 const testData = require("../db/data/test/index");
+const bcrypt = require("bcrypt");
+const { insertSignup } = require("../models/signup");
 
 beforeEach(async () => {
   await seed(testData);
@@ -1305,6 +1311,183 @@ describe("app", () => {
 
         expect(body.msg).toBe("Invalid method!");
       });
+    });
+  });
+  describe("POST /singup", () => {
+    test("Responds with status of 201", async () => {
+      const testUser = {
+        first_name: "Alice",
+        surname: "Aley",
+        email: "g@g.com",
+        is_host: false,
+        password: "12345",
+      };
+
+      await request(app).post("/signup").send(testUser).expect(201);
+    });
+    test("Should respond with new token", async () => {
+      const testUser = {
+        first_name: "Alice",
+        surname: "Aley",
+        email: "g@g.com",
+        is_host: false,
+        password: "12345",
+      };
+
+      const { body } = await request(app)
+        .post("/signup")
+        .send(testUser)
+        .expect(201);
+
+      expect(body).toEqual({ token: expect.anything() });
+    });
+    test("Responds with status of 400 if first_name is not provided", async () => {
+      const testUser = {
+        surname: "Aley",
+        email: "g@g.com",
+        is_host: false,
+        password: "12345",
+      };
+
+      const { body } = await request(app)
+        .post("/signup")
+        .send(testUser)
+        .expect(400);
+
+      expect(body.msg).toBe("First name should be provided!");
+    });
+    test("Responds with status of 400 if surname is not provided", async () => {
+      const testUser = {
+        first_name: "Alice",
+        email: "g@g.com",
+        is_host: false,
+        password: "12345",
+      };
+
+      const { body } = await request(app)
+        .post("/signup")
+        .send(testUser)
+        .expect(400);
+
+      expect(body.msg).toBe("Surname should be provided!");
+    });
+    test("Responds with status of 400 if email is not provided", async () => {
+      const testUser = {
+        first_name: "Alice",
+        surname: "Aley",
+        is_host: false,
+        password: "12345",
+      };
+
+      const { body } = await request(app)
+        .post("/signup")
+        .send(testUser)
+        .expect(400);
+
+      expect(body.msg).toBe("Email should be provided!");
+    });
+    test("Responds with status of 400 if password is not provided", async () => {
+      const testUser = {
+        first_name: "Alice",
+        surname: "Aley",
+        email: "g@g.com",
+        is_host: false,
+      };
+
+      const { body } = await request(app)
+        .post("/signup")
+        .send(testUser)
+        .expect(400);
+
+      expect(body.msg).toBe("Password should be provided!");
+    });
+    test("Responds with status 405 for invalid methods", async () => {
+      const methods = ["put", "patch", "delete", "get"];
+      methods.forEach(async (method) => {
+        const { body } = await request(app)[method]("/signup").expect(405);
+
+        expect(body.msg).toBe("Invalid method!");
+      });
+    });
+  });
+  describe("POST /login", () => {
+    test("Responds with status of 201", async () => {
+      hashedPassword = bcrypt.hashSync("12345", 10);
+
+      await insertSignup("Alice", "Aley", "g@g.com", false, hashedPassword);
+
+      const testUser = {
+        email: "g@g.com",
+        password: "12345",
+      };
+
+      await request(app).post("/login").send(testUser).expect(201);
+    });
+    test("Responds with new token", async () => {
+      hashedPassword = bcrypt.hashSync("12345", 10);
+
+      await insertSignup("Alice", "Aley", "g@g.com", false, hashedPassword);
+
+      const testUser = {
+        email: "g@g.com",
+        password: "12345",
+      };
+
+      const { body } = await request(app)
+        .post("/login")
+        .send(testUser)
+        .expect(201);
+
+      expect(body).toEqual({ token: expect.anything() });
+    });
+    test("Responds with status of 400 if email is not provided", async () => {
+      hashedPassword = bcrypt.hashSync("12345", 10);
+
+      await insertSignup("Alice", "Aley", "g@g.com", false, hashedPassword);
+
+      const testUser = {
+        password: "12345",
+      };
+
+      const { body } = await request(app)
+        .post("/login")
+        .send(testUser)
+        .expect(400);
+
+      expect(body.msg).toBe("Email should be provided!");
+    });
+    test("Responds with status of 400 if password is not provided", async () => {
+      hashedPassword = bcrypt.hashSync("12345", 10);
+
+      await insertSignup("Alice", "Aley", "g@g.com", false, hashedPassword);
+
+      const testUser = {
+        email: "g@g.com",
+      };
+
+      const { body } = await request(app)
+        .post("/login")
+        .send(testUser)
+        .expect(400);
+
+      expect(body.msg).toBe("Password should be provided!");
+    });
+    test("Responds with status of 401 if password is not matched", async () => {
+      hashedPassword = bcrypt.hashSync("12345", 10);
+
+      await insertSignup("Alice", "Aley", "g@g.com", false, hashedPassword);
+
+      const testUser = {
+        email: "g@g.com",
+        password: "123456",
+      };
+
+      const { body } = await request(app)
+        .post("/login")
+        .send(testUser)
+        .expect(401);
+
+      expect(body.msg).toBe("Incorrect credentials!");
     });
   });
 });

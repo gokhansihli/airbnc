@@ -17,7 +17,7 @@ async function insertUsersData(usersData) {
   const insertedUsers = await db.query(
     format(
       `INSERT INTO users 
-    (first_name, surname, email, phone_number, is_host, avatar)
+    (first_name, surname, email, phone_number, is_host, avatar, password_hash)
     VALUES %L RETURNING *;`,
       formatUsers(usersData)
     )

@@ -70,6 +70,12 @@ Or just to run the app:
 npm run test-app
 ```
 
+Or just to run the authorisation:
+
+```bash
+npm run test-auth
+```
+
 ## Live API
 
 To view the live API:  

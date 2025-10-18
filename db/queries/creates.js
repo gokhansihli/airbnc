@@ -9,6 +9,7 @@ async function createTables() {
                     phone_number VARCHAR,
                     is_host BOOLEAN NOT NULL,
                     avatar VARCHAR,
+                    password_hash VARCHAR(255) NOT NULL,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     );`);
 
