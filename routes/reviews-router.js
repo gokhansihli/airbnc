@@ -1,4 +1,5 @@
 const reviewsRouter = require("express").Router({ mergeParams: true });
+const { verifyToken } = require("./utils/auth-middleware");
 
 const {
   deleteReview,
@@ -7,11 +8,14 @@ const {
 } = require("../controllers/reviews");
 const { handleInvalidMethods } = require("../errors");
 
-reviewsRouter.route("/:id").delete(deleteReview).all(handleInvalidMethods);
+reviewsRouter
+  .route("/:id")
+  .delete(verifyToken, deleteReview)
+  .all(handleInvalidMethods);
 reviewsRouter
   .route("/")
   .get(getPropertyReviews)
-  .post(postPropertyReview)
+  .post(verifyToken, postPropertyReview)
   .all(handleInvalidMethods);
 
 module.exports = reviewsRouter;

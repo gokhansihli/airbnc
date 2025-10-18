@@ -2,6 +2,7 @@ const propertiesRouter = require("express").Router();
 const bookingsRouter = require("./bookings-router");
 const reviewsRouter = require("./reviews-router");
 const favouritesRouter = require("./favourites-router");
+const { verifyToken } = require("./utils/auth-middleware");
 
 const { getProperties, getPropertyById } = require("../controllers/properties");
 const { getPropertyBookings } = require("../controllers/bookings");
@@ -13,7 +14,7 @@ propertiesRouter.route("/").get(getProperties).all(handleInvalidMethods);
 propertiesRouter.use("/:id", favouritesRouter);
 propertiesRouter
   .route("/:property_id/users/:user_id/favourite")
-  .delete(deletePropertyUserFavourite)
+  .delete(verifyToken, deletePropertyUserFavourite)
   .all(handleInvalidMethods);
 
 propertiesRouter.route("/:id").get(getPropertyById).all(handleInvalidMethods);
@@ -21,7 +22,7 @@ propertiesRouter.route("/:id").get(getPropertyById).all(handleInvalidMethods);
 propertiesRouter.use("/:id/booking", bookingsRouter);
 propertiesRouter
   .route("/:id/bookings")
-  .get(getPropertyBookings)
+  .get(verifyToken, getPropertyBookings)
   .all(handleInvalidMethods);
 
 propertiesRouter.use("/:id/reviews", reviewsRouter);

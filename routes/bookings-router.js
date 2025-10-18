@@ -1,4 +1,5 @@
 const bookingsRouter = require("express").Router({ mergeParams: true });
+const { verifyToken } = require("./utils/auth-middleware");
 
 const {
   postPropertyBooking,
@@ -9,10 +10,13 @@ const { handleInvalidMethods } = require("../errors");
 
 bookingsRouter
   .route("/:id")
-  .delete(deleteBooking)
-  .patch(patchBooking)
+  .delete(verifyToken, deleteBooking)
+  .patch(verifyToken, patchBooking)
   .all(handleInvalidMethods);
 
-bookingsRouter.route("/").post(postPropertyBooking).all(handleInvalidMethods);
+bookingsRouter
+  .route("/")
+  .post(verifyToken, postPropertyBooking)
+  .all(handleInvalidMethods);
 
 module.exports = bookingsRouter;
