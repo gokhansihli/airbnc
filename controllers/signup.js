@@ -21,7 +21,7 @@ exports.postSignup = async (req, res, next) => {
     hashedPassword
   );
 
-  const token = jwt.sign({ email: user.email }, TOKEN_SECRET);
+  const token = jwt.sign({ id: user.user_id, email: user.email }, TOKEN_SECRET);
 
   res.status(201).send({ token });
 };

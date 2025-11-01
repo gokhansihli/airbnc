@@ -5,9 +5,13 @@ const {
   validateRemovePropertyUserFavourite,
 } = require("./utils-validations/favourites-validations");
 
-exports.insertPropertyFavourite = async (guest_id, id) => {
+exports.insertPropertyFavourite = async (guest_id, id, signedUserId) => {
   await validateInsertPropertyFavourite(id, guest_id);
   await checkExists("users", "user_id", guest_id, "User not found!");
+
+  if (signedUserId !== +guest_id) {
+    return Promise.reject({ status: 403, msg: "Access denied!" });
+  }
 
   let queryStr = `INSERT INTO favourites (guest_id, property_id)
     VALUES ($1,$2) RETURNING *;`;
@@ -19,7 +23,11 @@ exports.insertPropertyFavourite = async (guest_id, id) => {
   return favourite;
 };
 
-exports.removePropertyUserFavourite = async (property_id, user_id) => {
+exports.removePropertyUserFavourite = async (
+  property_id,
+  user_id,
+  signedUserId
+) => {
   await validateRemovePropertyUserFavourite(property_id, user_id);
   await checkExists(
     "properties",
@@ -35,6 +43,10 @@ exports.removePropertyUserFavourite = async (property_id, user_id) => {
   const {
     rows: [favourite],
   } = await db.query(queryStr, [property_id, user_id]);
+
+  if (!favourite) {
+    return Promise.reject({ status: 403, msg: "Access denied!" });
+  }
 
   return favourite;
 };

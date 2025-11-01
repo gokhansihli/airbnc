@@ -1,5 +1,5 @@
 const bookingsRouter = require("express").Router({ mergeParams: true });
-const { verifyToken } = require("./utils/auth-middleware");
+const { verifyToken } = require("./utils/Authentication-middleware");
 
 const {
   postPropertyBooking,

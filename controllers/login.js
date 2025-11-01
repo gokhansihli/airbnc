@@ -20,7 +20,10 @@ exports.postLogin = async (req, res, next) => {
   if (!passwordMatch) {
     res.status(401).send({ msg: "Incorrect credentials!" });
   } else {
-    const token = jwt.sign({ email: user.email }, TOKEN_SECRET);
+    const token = jwt.sign(
+      { id: user.user_id, email: user.email },
+      TOKEN_SECRET
+    );
     res.status(201).send({ token });
   }
 };

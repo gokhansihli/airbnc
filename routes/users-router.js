@@ -1,5 +1,5 @@
 const usersRouter = require("express").Router();
-const { verifyToken } = require("./utils/auth-middleware");
+const { verifyToken } = require("./utils/Authentication-middleware");
 
 const { getUserBookings } = require("../controllers/bookings");
 const { getUserById, patchUser } = require("../controllers/users");

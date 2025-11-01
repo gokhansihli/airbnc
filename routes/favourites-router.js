@@ -1,5 +1,5 @@
 const favouritesRouter = require("express").Router({ mergeParams: true });
-const { verifyToken } = require("./utils/auth-middleware");
+const { verifyToken } = require("./utils/Authentication-middleware");
 
 const { postPropertyFavourite } = require("../controllers/favourites");
 const { handleInvalidMethods } = require("../errors");
