@@ -15,16 +15,24 @@ exports.getPropertyReviews = async (req, res, next) => {
 exports.postPropertyReview = async (req, res, next) => {
   const { guest_id, rating, comment } = req.body;
   const { id } = req.params;
+  const signedUserId = req.user.id;
 
-  const review = await insertPropertyReview(id, guest_id, rating, comment);
+  const review = await insertPropertyReview(
+    id,
+    guest_id,
+    rating,
+    comment,
+    signedUserId
+  );
 
   res.status(201).send({ review });
 };
 
 exports.deleteReview = async (req, res, next) => {
   const { id } = req.params;
+  const signedUserId = req.user.id;
 
-  const review = await removeReview(id);
+  const review = await removeReview(id, signedUserId);
 
   res.status(204).send({ review });
 };

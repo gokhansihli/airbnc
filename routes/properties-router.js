@@ -2,7 +2,7 @@ const propertiesRouter = require("express").Router();
 const bookingsRouter = require("./bookings-router");
 const reviewsRouter = require("./reviews-router");
 const favouritesRouter = require("./favourites-router");
-const { verifyToken } = require("./utils/auth-middleware");
+const { verifyToken } = require("./utils/Authentication-middleware");
 
 const { getProperties, getPropertyById } = require("../controllers/properties");
 const { getPropertyBookings } = require("../controllers/bookings");

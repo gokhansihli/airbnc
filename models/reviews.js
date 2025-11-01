@@ -25,10 +25,20 @@ exports.fetchPropertyReviews = async (id) => {
   return { reviews, average_rating };
 };
 
-exports.insertPropertyReview = async (id, guest_id, rating, comment) => {
+exports.insertPropertyReview = async (
+  id,
+  guest_id,
+  rating,
+  comment,
+  signedUserId
+) => {
   await checkExists("properties", "property_id", id, "Property not found!");
   await validateInsertPropertyReview(guest_id, rating, comment);
   await checkExists("users", "user_id", guest_id, "User not found!");
+
+  if (signedUserId !== +guest_id) {
+    return Promise.reject({ status: 403, msg: "Access denied!" });
+  }
 
   let queryStr = `INSERT INTO reviews (property_id, guest_id, rating, comment)
                   VALUES
@@ -41,15 +51,23 @@ exports.insertPropertyReview = async (id, guest_id, rating, comment) => {
   return review;
 };
 
-exports.removeReview = async (id) => {
+exports.removeReview = async (id, signedUserId) => {
   await validateRemoveReview(id);
   await checkExists("reviews", "review_id", id, "Review not found!");
 
-  let queryStr = `DELETE FROM reviews WHERE review_id = $1 RETURNING *`;
+  const {
+    rows: [foundReview],
+  } = await db.query(`SELECT guest_id FROM reviews WHERE review_id = $1`, [id]);
+
+  let queryStr = `DELETE FROM reviews WHERE review_id = $1 AND guest_id = $2 RETURNING *`;
 
   const {
     rows: [review],
-  } = await db.query(queryStr, [id]);
+  } = await db.query(queryStr, [id, signedUserId]);
+
+  if (!review) {
+    return Promise.reject({ status: 403, msg: "Access denied!" });
+  }
 
   return review;
 };

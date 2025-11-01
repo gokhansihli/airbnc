@@ -5,10 +5,14 @@ const {
   validateUpdateUser,
 } = require("./utils-validations/users-validations");
 
-exports.fetchUserById = async (id) => {
+exports.fetchUserById = async (id, user_id) => {
   await validateFetchUserById(id);
 
   await checkExists("users", "user_id", id, "User not found!");
+
+  if (user_id !== +id) {
+    return Promise.reject({ status: 403, msg: "Access denied!" });
+  }
 
   let queryStr = `SELECT users.user_id, users.first_name, users.surname, 
         users.email, users.phone_number, users.avatar, users.created_at
@@ -22,8 +26,12 @@ exports.fetchUserById = async (id) => {
   return user;
 };
 
-exports.updateUser = async (fieldstoUpdate, id) => {
+exports.updateUser = async (fieldstoUpdate, id, user_id) => {
   await checkExists("users", "user_id", id, "User not found!");
+
+  if (user_id !== +id) {
+    return Promise.reject({ status: 403, msg: "Access denied!" });
+  }
 
   const allowedFields = ["first_name", "surname", "email", "phone", "avatar"];
 
