@@ -1,5 +1,6 @@
 const express = require("express");
 const path = require("path");
+const cors = require("cors");
 
 const {
   handlePathNotFound,
@@ -11,6 +12,8 @@ const apiRouter = require("./routes/api-router");
 const authRouter = require("./routes/auth-router");
 
 const app = express();
+
+app.use(cors());
 
 app.use(express.json());
 
