@@ -12,7 +12,10 @@ exports.fetchProperties = async (
   sort = "favourite",
   order = "DESC",
   host,
-  amenity
+  amenity,
+  location,
+  check_in_date,
+  check_out_date
 ) => {
   const orderBy = order.toUpperCase();
   const sortLookUp = {
@@ -94,6 +97,26 @@ exports.fetchProperties = async (
   if (!Array.isArray(amenity) && amenity !== undefined) {
     queryValues.push(amenity);
     whereConditions.push(`amenities.amenity = $${queryValues.length}`);
+  }
+
+  if (location !== undefined) {
+    queryValues.push(`%${location}%`);
+    whereConditions.push(`properties.location ILIKE $${queryValues.length}`);
+  }
+
+  if (check_in_date && check_out_date) {
+    queryStr += `
+      LEFT JOIN bookings
+      ON bookings.property_id = properties.property_id
+      AND NOT (
+        bookings.check_out_date <= '${check_in_date}'
+        OR bookings.check_in_date >= '${check_out_date}'
+      )
+    `;
+  }
+
+  if (check_in_date && check_out_date) {
+    whereConditions.push("bookings.booking_id IS NULL");
   }
 
   if (whereConditions.length) {
