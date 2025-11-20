@@ -38,7 +38,7 @@ exports.fetchProperties = async (
     await checkExists("users", "user_id", host);
   }
 
-  let queryStr = `SELECT properties.property_id, properties.name, properties.location,
+  let queryStr = `SELECT properties.property_id, properties.name, properties.location, properties.property_type,
     CAST(price_per_night AS INTEGER),
     CONCAT(users.first_name, ' ', users.surname) AS host,
     COUNT(favourites.property_id) AS favourited_count,
