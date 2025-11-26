@@ -146,7 +146,7 @@ exports.fetchPropertyById = async (id, user_id) => {
     await checkExists("users", "user_id", user_id, "User not found!");
   }
 
-  let queryStr = `SELECT properties.property_id, properties.name AS property_name, properties.location, 
+  let queryStr = `SELECT properties.property_id, properties.name AS property_name, properties.location, properties.property_type,
     CAST (price_per_night AS INTEGER), 
     properties.description, 
     CONCAT(users.first_name,' ', users.surname) AS host,
