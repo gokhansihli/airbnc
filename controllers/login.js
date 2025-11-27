@@ -21,7 +21,13 @@ exports.postLogin = async (req, res, next) => {
     res.status(401).send({ msg: "Incorrect credentials!" });
   } else {
     const token = jwt.sign(
-      { id: user.user_id, email: user.email },
+      {
+        id: user.user_id,
+        first_name: user.first_name,
+        surname: user.surname,
+        is_host: user.is_host,
+        email: user.email,
+      },
       TOKEN_SECRET
     );
     res.status(201).send({ token });
