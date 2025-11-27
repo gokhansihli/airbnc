@@ -8,7 +8,7 @@ const {
 exports.fetchPropertyReviews = async (id) => {
   await checkExists("properties", "property_id", id);
 
-  let queryStr = `SELECT reviews.review_id, reviews.comment, reviews.rating, reviews.created_at,
+  let queryStr = `SELECT reviews.review_id, reviews.comment, reviews.rating, reviews.created_at, reviews.guest_id,
   CONCAT(users.first_name, ' ', users.surname) AS guest, 
   users.avatar AS guest_avatar
   FROM reviews
