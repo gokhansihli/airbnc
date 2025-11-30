@@ -8,16 +8,16 @@ const {
   validateFetchUserBookings,
 } = require("./utils-validations/bookings-validations");
 
-exports.fetchPropertyBookings = async (id, guest_id) => {
+exports.fetchPropertyBookings = async (id) => {
   await ValidateFetchPropertyBookings(id);
   await checkExists("properties", "property_id", id, "Property not found!");
 
   let queryStr = `SELECT bookings.booking_id, bookings.check_in_date, bookings.check_out_date, bookings.created_at
     FROM bookings
-    WHERE bookings.property_id = $1 AND bookings.guest_id =$2
+    WHERE bookings.property_id = $1 
     ORDER BY bookings.check_out_date DESC;`;
 
-  const { rows: bookings } = await db.query(queryStr, [id, guest_id]);
+  const { rows: bookings } = await db.query(queryStr, [id]);
 
   const property_id = +id;
 

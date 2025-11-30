@@ -22,7 +22,7 @@ propertiesRouter.route("/:id").get(getPropertyById).all(handleInvalidMethods);
 propertiesRouter.use("/:id/booking", bookingsRouter);
 propertiesRouter
   .route("/:id/bookings")
-  .get(verifyToken, getPropertyBookings)
+  .get(getPropertyBookings)
   .all(handleInvalidMethods);
 
 propertiesRouter.use("/:id/reviews", reviewsRouter);

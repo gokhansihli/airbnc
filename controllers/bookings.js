@@ -8,9 +8,8 @@ const {
 
 exports.getPropertyBookings = async (req, res, next) => {
   const { id } = req.params;
-  const guest_id = req.user.id;
 
-  const { bookings, property_id } = await fetchPropertyBookings(id, guest_id);
+  const { bookings, property_id } = await fetchPropertyBookings(id);
 
   res.status(200).send({ bookings, property_id });
 };
