@@ -4,7 +4,8 @@ const jwt = require("jsonwebtoken");
 const { TOKEN_SECRET } = process.env;
 
 exports.postSignup = async (req, res, next) => {
-  const { first_name, surname, email, is_host, password } = req.body;
+  const { first_name, surname, phone_number, email, is_host, password } =
+    req.body;
   if (!password) {
     return Promise.reject({
       status: 400,
@@ -16,6 +17,7 @@ exports.postSignup = async (req, res, next) => {
   const user = await insertSignup(
     first_name,
     surname,
+    phone_number,
     email,
     is_host,
     hashedPassword
@@ -28,6 +30,7 @@ exports.postSignup = async (req, res, next) => {
       surname: user.surname,
       is_host: user.is_host,
       email: user.email,
+      phone_number: user.phone_number,
     },
     TOKEN_SECRET
   );
