@@ -1,6 +1,7 @@
 const {
   insertPropertyFavourite,
   removePropertyUserFavourite,
+  fetchUserFavourites,
 } = require("../models/favourites");
 
 exports.postPropertyFavourite = async (req, res, next) => {
@@ -27,4 +28,21 @@ exports.deletePropertyUserFavourite = async (req, res, next) => {
   );
 
   res.status(204).send({ favourite });
+};
+
+exports.getUserFavourites = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const user_id = req.user.id;
+
+    console.log(id, typeof id);
+    console.log(user_id, typeof user_id);
+
+    const favourites = await fetchUserFavourites(id, user_id);
+
+    res.status(200).send({ favourites });
+  } catch (error) {
+    console.log(error);
+    next(err);
+  }
 };

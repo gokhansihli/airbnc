@@ -234,6 +234,30 @@
         </pre>
       </section>
       <section>
+        <h3>GET /api/users/:id/favourites</h3>
+        <p>Example request:</p>
+        <a
+          href="https://airbnc-b0sn.onrender.com/api/users/1/favourites"
+          class="api-url"
+          >https://airbnc-b0sn.onrender.com/api/users/1/favourites</a
+        >
+        <p>Example response:</p>
+        <pre>
+          {
+              "favourites": [
+                  {
+                      "favourite_id": 39,
+                      "property_id": 1,
+                      "property_name": "Modern Apartment in City Center",
+                      "host": "David Aley",
+                      "image": "https://images.unsplash.com/photo..."
+                  },
+                  ...
+              ]
+          }
+        </pre>
+      </section>
+      <section>
         <h3>GET /api/amenities</h3>
         <p>Example request:</p>
         <a href="https://airbnc-b0sn.onrender.com/api/amenities" class="api-url"

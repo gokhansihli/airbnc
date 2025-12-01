@@ -867,6 +867,73 @@ describe("app", () => {
       });
     });
   });
+  describe("GET api/users/:id/favourites", () => {
+    test("Responds with status 200", async () => {
+      currentUser = { id: 1, email: "userA@example.com" };
+      await request(app).get("/api/users/1/favourites").expect(200);
+    });
+
+    test("Responds with an object with correct keys", async () => {
+      const { body } = await request(app).get("/api/users/1/favourites");
+      expect(typeof body).toBe("object");
+      expect(body).toHaveProperty("favourites");
+    });
+
+    test("Favourites responds with an array on the key of property", async () => {
+      const { body } = await request(app).get("/api/users/1/favourites");
+      expect(Array.isArray(body.favourites)).toBe(true);
+    });
+
+    test("Favourites property should have correct shape", async () => {
+      const { body } = await request(app).get("/api/users/1/favourites");
+
+      body.favourites.forEach((fav) => {
+        expect(typeof fav.favourite_id).toBe("number");
+        expect(typeof fav.property_id).toBe("number");
+        expect(typeof fav.property_name).toBe("string");
+        expect(typeof fav.host).toBe("string");
+        expect(typeof fav.image).toBe("string");
+      });
+    });
+
+    test("Favourites should order by favourite_id ascending", async () => {
+      const { body } = await request(app).get("/api/users/1/favourites");
+      expect(body.favourites).toBeSortedBy("favourite_id");
+    });
+
+    test("Responds with empty array and status 200 if user has no favourites", async () => {
+      const { body } = await request(app).get("/api/users/1/favourites");
+      expect(Array.isArray(body.favourites)).toBe(true);
+    });
+
+    test("Responds with status 400 if user_id is not a number", async () => {
+      const { body } = await request(app)
+        .get("/api/users/abc/favourites")
+        .expect(400);
+
+      expect(body.msg).toBe("User value should be a number!");
+    });
+
+    test("Responds with status 404 if user_id does not exist", async () => {
+      const { body } = await request(app)
+        .get("/api/users/99999/favourites")
+        .expect(404);
+
+      expect(body.msg).toBe("User not found!");
+    });
+
+    test("Responds with status 405 for invalid methods", async () => {
+      const methods = ["put", "delete", "post", "patch"];
+      methods.forEach(async (method) => {
+        const { body } = await request(app)
+          [method]("/api/users/1/favourites")
+          .expect(405);
+
+        expect(body.msg).toBe("Invalid method!");
+      });
+    });
+  });
+
   describe("GET api/amenities", () => {
     test("Responds with status of 200", async () => {
       await request(app).get("/api/amenities").expect(200);
