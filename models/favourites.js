@@ -50,3 +50,28 @@ exports.removePropertyUserFavourite = async (
 
   return favourite;
 };
+
+exports.fetchUserFavourites = async (id, user_id) => {
+  await checkExists("users", "user_id", id, "User not found!");
+
+  if (user_id !== +id) {
+    return Promise.reject({ status: 403, msg: "Access denied!" });
+  }
+
+  const queryStr = `
+    SELECT favourites.favourite_id, properties.property_id, properties.name AS property_name,
+      CONCAT(users.first_name, ' ', users.surname) AS host,
+      (SELECT image_url FROM images 
+         WHERE images.property_id = properties.property_id 
+         ORDER BY image_id LIMIT 1) AS image
+    FROM favourites
+    JOIN users ON favourites.guest_id = users.user_id
+    JOIN properties ON favourites.property_id = properties.property_id
+    WHERE users.user_id = $1
+    ORDER BY favourites.favourite_id ASC;
+  `;
+
+  const { rows: favourites } = await db.query(queryStr, [id]);
+
+  return favourites;
+};
