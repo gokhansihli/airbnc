@@ -43,6 +43,7 @@ exports.fetchProperties = async (
     CONCAT(users.first_name, ' ', users.surname) AS host,
     COUNT(favourites.property_id) AS favourited_count,
     COALESCE(AVG(reviews.rating)::FLOAT, 0) AS avg_rating,
+    ARRAY_AGG(favourites.guest_id) AS favourited_by,
     (SELECT image_url FROM images WHERE images.property_id = properties.property_id
       ORDER BY image_id ASC LIMIT 1) AS image
     FROM properties
